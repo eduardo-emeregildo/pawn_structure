@@ -1,1 +1,1 @@
-# pawn_structure
+# Chess study tool to query database based on pawn structure
