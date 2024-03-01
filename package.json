@@ -1,0 +1,19 @@
+{
+  "name": "pawn_structure",
+  "version": "1.0.0",
+  "description": "Chess study tool to query games based on pawn structure",
+  "main": "queries.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eduardo-emeregildo/pawn_structure.git"
+  },
+  "author": "Eduardo Emeregildo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eduardo-emeregildo/pawn_structure/issues"
+  },
+  "homepage": "https://github.com/eduardo-emeregildo/pawn_structure#readme"
+}
