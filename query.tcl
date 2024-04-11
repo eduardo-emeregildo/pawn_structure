@@ -8,16 +8,20 @@
 
 
 puts "starting script.."
-sc_base open [lindex $argv 0]
+# set file_exists [file exists "quer.bat"]
+# puts "$file_exists"
 
-set queryArgs [split [lindex $argv 1] "@"]
-# foreach i $queryArgs {
-#     puts "$i"
-# }
-sc_search material {*}$queryArgs
-set filter_num [sc_filter count]
-puts "$filter_num"
-sc_game list 1 "$filter_num" gw15b15WBr\n [lindex $argv 2]
+if {[file exists [lindex $argv 2]] == 0} {
+    sc_base open [lindex $argv 0]
+    set queryArgs [split [lindex $argv 1] "@"]
+    # foreach i $queryArgs {
+    #     puts "$i"
+    # }
+    sc_search material {*}$queryArgs
+    set filter_num [sc_filter count]
+    puts "$filter_num"
+    sc_game list 1 "$filter_num" g@w15@b15@W@B@r\n [lindex $argv 2] 
+}
 puts "script completed"
 
 
