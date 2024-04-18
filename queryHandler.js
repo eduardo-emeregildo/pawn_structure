@@ -9,7 +9,8 @@
 const {spawn} = require('child_process');
 const path = require('path');
 const fs = require('fs');
-const {Client} = require('pg');
+const {Client,Pool} = require('pg');
+const pgStream = require('pg-copy-streams');
 
 const options = { cwd: path.join(__dirname,'Scid vs PC-4.24','bin')};
 
@@ -22,8 +23,64 @@ function query(baseName,query,filename){
         });
 
     child.on('close', function (code, signal) {
-        console.log('child process exited with ' +
-                    `code ${code} and signal ${signal}`);
+        // make a table on pawnstructure db
+        console.log("Now making table on sql db");
+        fs.readFile('auth.json', 'utf8', (err, data) => {
+            if (!err) {
+                console.log("File read successful");
+                const client = new Client(JSON.parse(data));
+                client.connect();
+                client.query(`SET CLIENT_ENCODING TO 'LATIN1'`, (err,res) => {
+                    if(err){
+                        console.log(err.message);
+                    }
+
+                    client.query(`DROP TABLE IF EXISTS ${filename.slice(0,-4)}`, (err,res) => {
+                        if(err){
+                            console.log(err.message);
+                        }
+
+                        client.query(`CREATE TABLE ${filename.slice(0,-4)}(
+                            gamenumber INTEGER,
+                            whitename VARCHAR(15),
+                            blackname VARCHAR(15),
+                            whiteelo SMALLINT,
+                            blackelo SMALLINT,
+                            result CHAR(1) )`, (err,res) => {
+                            if(err){
+                                console.log("ERROR !!",err.message);
+                            }
+
+                                let stream = client.query(pgStream.from(`COPY ${filename.slice(0,-4)} FROM STDIN ( DELIMITER '@', FORMAT CSV, QUOTE '$' ENCODING 'LATIN1')`));
+                                //fix this for tomorrow, probably pg-copy-streams not being used correctly
+                                let fileStream = fs.createReadStream(path.join(__dirname,'Scid vs PC-4.24','bin',filename));
+                                fileStream.pipe(stream);
+
+                                client.end();
+
+
+                            
+                            });
+                    });
+                });
+                
+                // const ok = client.query(`SET CLIENT_ENCODING TO 'LATIN1'`);
+                // client.query(`DROP TABLE IF EXISTS ${filename.slice(0,-4)}`);
+                // client.query(`CREATE TABLE ${filename.slice(0,-4)}(
+                //     gamenumber INTEGER,
+                //     whitename VARCHAR(15),
+                //     blackname VARCHAR(15),
+                //     whiteelo SMALLINT,
+                //     blackelo SMALLINT,
+                //     result CHAR(1)`
+                // );
+                // client.query(`\COPY whiteIQP FROM ${path.join(__dirname,'Scid vs PC-4.24','bin',filename)} DELIMITER '@' CSV QUOTE '$' ENCODING 'LATIN1'`);
+                // client.end();
+            }
+            else{
+                console.log(err);
+            }
+        });
       });
     
     child.on('error' , (error) => console.log(`error: ${error}`));
@@ -57,7 +114,6 @@ function getPgn(baseName,gameNumber){
 function getGameInfo(tablename,offset){
 // gets the game info of the tablename specified, gets 15 game info given the offset
 // offset = 0 gets the first 15 games, offset 1, gets games 16-30 etc 
-
     fs.readFile('auth.json', 'utf8', (err, data) => {
         if (!err) {
             const client = new Client(JSON.parse(data));
@@ -85,7 +141,6 @@ function deleteGames(){
 //might need another script that periodically checks for duplicate files and removes them
 //reason is if multiple users made the same query, no need for dups to exists
 
-
 }
 
 
@@ -93,10 +148,12 @@ function deleteGames(){
 
 
 
-// query('LumbrasGigaBase','-wq@0 2@-bq@0 2@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@1 8@-bp@0 8@-wb@0 2@-bb@0 2@-pattern@1 wp d ?@-pattern@0 wp c ?@-pattern@0 wp e ?','works.txt');
+query('LumbrasGigaBase','-wq@0 2@-bq@0 2@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@1 8@-bp@0 8@-wb@0 2@-bb@0 2@-pattern@1 wp d ?@-pattern@0 wp c ?@-pattern@0 wp e ?','whiteiqp.csv');
 
-getGameInfo("whiteiqp",0);
-getPgn("LumbrasGigaBase",3);
+// getGameInfo("whiteiqp",0);
+// getPgn("LumbrasGigaBase",3);
+
+
 
 // const ok= spawn('node', ['--version']);
 // ok.stdout.on('data', (data) => {
