@@ -1,7 +1,9 @@
 //this file contains all the functions that interact with the tcl script files
 
 
-//FOR TOMORROW: work on the query function. After creating the txt containing the gameinfo, on process close(or end) create the sql table,then delete txt file
+//FOR TOMORROW: figure out what to do with the deleteTables function. My idea was to track the current table with each user and
+// delete that corresponding table once they exit. On the case where user creates multiple tables, only the current one is needed,
+// so delete prior tables.
 
 
 //To do: write all functions
@@ -10,8 +12,6 @@ const {spawn} = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const {Client,Pool} = require('pg');
-const pgStream = require('pg-copy-streams');
-const csvParser = require('csv-parser');
 
 const options = { cwd: path.join(__dirname,'Scid vs PC-4.24','bin')};
 
@@ -24,11 +24,21 @@ function query(baseName,query,filename){
         });
 
     child.on('close', function (code, signal) {
-        // make a table on pawnstructure db
         console.log("Now making table on sql db..");
-        fs.readFile('auth.json', 'utf8', (err, data) => {
+        fs.readFile('auth.json', 'utf8', async(err, data) => {
             if (!err) {
-                //write code to create table here
+                //write code to create table here(withc client.query), uninstall dependencies that im not using, write code to delete csv after its been imported to sql table
+                const client = new Client(JSON.parse(data));
+                client.connect();
+                await client.query(`CREATE TABLE ${filename.slice(0,-4)}(
+                    gamenumber INTEGER,
+                    whitename VARCHAR(15),
+                    blackname VARCHAR(15),
+                    whiteelo SMALLINT,
+                    blackelo SMALLINT,
+                    result CHAR(1)
+                )`);
+                await client.end();
 
 
                 let sql = spawn('psql',['-U','postgres','-a','-w','-d','pawn_structure', '-c',
@@ -40,7 +50,16 @@ function query(baseName,query,filename){
 
                 sql.on('close', function (code, signal) {
                     console.log('child process exited with ' +
-                                `code ${code} and signal ${signal}`,'Delete csv file here!');
+                                `code ${code} and signal ${signal}`,);
+
+                    fs.unlink(path.join(__dirname,'Scid vs PC-4.24','bin',filename), (err) => {
+                        if(!err){
+                            console.log("Deleted csv");
+                        }
+                        else{
+                            console.log("Error deleting csv ", err);
+                        }
+                    });
                     });
 
             }
@@ -103,105 +122,15 @@ function getGameInfo(tablename,offset){
 
 }
 
-function deleteGames(){
-//this function deletes the txt file containing the game info,
+function deleteTables(){
+//this function deletes the tables which the current user has made,
 //might need another script that periodically checks for duplicate files and removes them
 //reason is if multiple users made the same query, no need for dups to exists
 
 }
 
 
-
-
-
-
 // query('LumbrasGigaBase','-wq@0 2@-bq@0 2@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@1 8@-bp@0 8@-wb@0 2@-bb@0 2@-pattern@1 wp d ?@-pattern@0 wp c ?@-pattern@0 wp e ?','whiteiqp.csv');
-
-
-
-// fs.readFile('auth.json', 'utf8',(err, data) => {
-//     if (!err) {
-//         let child = spawn('psql',['-U','postgres','-a','-w','-d','pawn_structure', '-c',`\\COPY whiteIQP FROM 'C:\\Users\\emere\\Desktop\\pawn_structure_project\\pawn_structure\\Scid vs PC-4.24\\bin\\whiteIQP.csv' DELIMITER '@' CSV QUOTE '$' ENCODING 'LATIN1';`]);
-
-//         child.stdout.on('data', (data) => {
-//             console.log(`child stdout:\n${data}`);
-//             });
-
-
-//         // var client = new Client(JSON.parse(data));
-//         // client.connect(function(err){
-//         //     if (err) throw err;
-//         //     // var stream = client.query(pgStream.from(`COPY whiteiqp FROM STDIN (DELIMITER '@' CSV QUOTE '$' ENCODING 'LATIN1')`));
-//         //     // var fileStream = fs.createReadStream(path.join(__dirname,'Scid vs PC-4.24','bin','whiteiqp.csv'));
-//         //     // fileStream.pipe(stream);
-//         //     // client.end();
-//         //     let results = [];
-//         //     let count =0;
-//         //     const query = 'INSERT INTO "whiteiqp" (gamenumber,whitename,blackname,whiteelo,blackelo,result) VALUES ($1,$2,$3,$4,$5,$6)';
-//         //     //for tomorrow, do the insert in the data event and clear the results array to deal with memory issues. The insert can happen after x amount of reads
-//         //     fs.createReadStream(path.join(__dirname,'Scid vs PC-4.24','bin','whiteiqp.csv'))
-//         //         .pipe(csvParser({separator: '@',quote: "$"}))
-//         //         .on('data', async (row) => {
-//         //             // write to table every 1000 rows read
-//         //             results.push(row);
-//         //             count++;
-//         //             if(count == 1000){
-//         //                 await Promise.all(
-//         //                     results.map(async row => {
-//         //                         const {gamenumber,whitename,blackname,whiteelo,blackelo,result} = row;
-//         //                         const values = [gamenumber,whitename,blackname,whiteelo,blackelo,result];
-//         //                         await client.query(query,values);
-//         //                     })
-    
-//         //                 );
-//         //                 count = 0;
-//         //                 results = [];
-
-
-//         //             }
-//         //         })
-//         //         .on('end', async () => {
-//         //             // const query = 'INSERT INTO "whiteiqp" (gamenumber,whitename,blackname,whiteelo,blackelo,result) VALUES ($1,$2,$3,$4,$5,$6)';
-//         //             if (count != 0)
-//         //             {
-//         //                 await Promise.all(
-//         //                     results.map(async row => {
-//         //                         const {gamenumber,whitename,blackname,whiteelo,blackelo,result} = row;
-//         //                         const values = [gamenumber,whitename,blackname,whiteelo,blackelo,result];
-//         //                         await client.query(query,values);
-//         //                     })
-
-//         //                 );
-//         //             }
-//         //             client.end();
-//         //         });
-
-//         // });
-//         // var stream = client.query(pgStream.from(`COPY whiteiqp FROM STDIN (DELIMITER '@' CSV QUOTE '$' ENCODING 'LATIN1')`));
-//         // var fileStream = fs.createReadStream(path.join(__dirname,'Scid vs PC-4.24','bin','whiteiqp.csv'));
-//         // fileStream.pipe(stream);
-                
-//     }
-//     else{
-//         console.log("error reading file: ",err);
-//     }
-// });
-
-
-
 
 // getGameInfo("whiteiqp",0);
 // getPgn("LumbrasGigaBase",3);
-
-
-
-// const ok= spawn('node', ['--version']);
-// ok.stdout.on('data', (data) => {
-//   console.log(`child stdout:\n${data}`);
-// });
-
-
-
-
-
-

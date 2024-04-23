@@ -17,9 +17,7 @@
   },
   "homepage": "https://github.com/eduardo-emeregildo/pawn_structure#readme",
   "dependencies": {
-    "csv-parser": "^3.0.0",
     "express": "^4.18.3",
-    "pg": "^8.11.5",
-    "pg-copy-streams": "^6.0.6"
+    "pg": "^8.11.5"
   }
 }
