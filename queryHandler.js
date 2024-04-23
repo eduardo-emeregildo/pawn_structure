@@ -11,6 +11,7 @@ const path = require('path');
 const fs = require('fs');
 const {Client,Pool} = require('pg');
 const pgStream = require('pg-copy-streams');
+const csvParser = require('csv-parser');
 
 const options = { cwd: path.join(__dirname,'Scid vs PC-4.24','bin')};
 
@@ -24,61 +25,27 @@ function query(baseName,query,filename){
 
     child.on('close', function (code, signal) {
         // make a table on pawnstructure db
-        console.log("Now making table on sql db");
+        console.log("Now making table on sql db..");
         fs.readFile('auth.json', 'utf8', (err, data) => {
             if (!err) {
-                console.log("File read successful");
-                const client = new Client(JSON.parse(data));
-                client.connect();
-                client.query(`SET CLIENT_ENCODING TO 'LATIN1'`, (err,res) => {
-                    if(err){
-                        console.log(err.message);
-                    }
-
-                    client.query(`DROP TABLE IF EXISTS ${filename.slice(0,-4)}`, (err,res) => {
-                        if(err){
-                            console.log(err.message);
-                        }
-
-                        client.query(`CREATE TABLE ${filename.slice(0,-4)}(
-                            gamenumber INTEGER,
-                            whitename VARCHAR(15),
-                            blackname VARCHAR(15),
-                            whiteelo SMALLINT,
-                            blackelo SMALLINT,
-                            result CHAR(1) )`, (err,res) => {
-                            if(err){
-                                console.log("ERROR !!",err.message);
-                            }
-
-                                let stream = client.query(pgStream.from(`COPY ${filename.slice(0,-4)} FROM STDIN ( DELIMITER '@', FORMAT CSV, QUOTE '$' ENCODING 'LATIN1')`));
-                                //fix this for tomorrow, probably pg-copy-streams not being used correctly
-                                let fileStream = fs.createReadStream(path.join(__dirname,'Scid vs PC-4.24','bin',filename));
-                                fileStream.pipe(stream);
-
-                                client.end();
+                //write code to create table here
 
 
-                            
-                            });
+                let sql = spawn('psql',['-U','postgres','-a','-w','-d','pawn_structure', '-c',
+                `\\COPY ${filename.slice(0,-4)} FROM 'C:\\Users\\emere\\Desktop\\pawn_structure_project\\pawn_structure\\Scid vs PC-4.24\\bin\\${filename}' DELIMITER '@' CSV QUOTE '$' ENCODING 'LATIN1';`]);
+
+                sql.stdout.on('data', (data) => {
+                    console.log(`child stdout:\n${data}`);
                     });
-                });
-                
-                // const ok = client.query(`SET CLIENT_ENCODING TO 'LATIN1'`);
-                // client.query(`DROP TABLE IF EXISTS ${filename.slice(0,-4)}`);
-                // client.query(`CREATE TABLE ${filename.slice(0,-4)}(
-                //     gamenumber INTEGER,
-                //     whitename VARCHAR(15),
-                //     blackname VARCHAR(15),
-                //     whiteelo SMALLINT,
-                //     blackelo SMALLINT,
-                //     result CHAR(1)`
-                // );
-                // client.query(`\COPY whiteIQP FROM ${path.join(__dirname,'Scid vs PC-4.24','bin',filename)} DELIMITER '@' CSV QUOTE '$' ENCODING 'LATIN1'`);
-                // client.end();
+
+                sql.on('close', function (code, signal) {
+                    console.log('child process exited with ' +
+                                `code ${code} and signal ${signal}`,'Delete csv file here!');
+                    });
+
             }
             else{
-                console.log(err);
+                console.log("Error reading auth file: ",err);
             }
         });
       });
@@ -148,7 +115,80 @@ function deleteGames(){
 
 
 
-query('LumbrasGigaBase','-wq@0 2@-bq@0 2@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@1 8@-bp@0 8@-wb@0 2@-bb@0 2@-pattern@1 wp d ?@-pattern@0 wp c ?@-pattern@0 wp e ?','whiteiqp.csv');
+// query('LumbrasGigaBase','-wq@0 2@-bq@0 2@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@1 8@-bp@0 8@-wb@0 2@-bb@0 2@-pattern@1 wp d ?@-pattern@0 wp c ?@-pattern@0 wp e ?','whiteiqp.csv');
+
+
+
+// fs.readFile('auth.json', 'utf8',(err, data) => {
+//     if (!err) {
+//         let child = spawn('psql',['-U','postgres','-a','-w','-d','pawn_structure', '-c',`\\COPY whiteIQP FROM 'C:\\Users\\emere\\Desktop\\pawn_structure_project\\pawn_structure\\Scid vs PC-4.24\\bin\\whiteIQP.csv' DELIMITER '@' CSV QUOTE '$' ENCODING 'LATIN1';`]);
+
+//         child.stdout.on('data', (data) => {
+//             console.log(`child stdout:\n${data}`);
+//             });
+
+
+//         // var client = new Client(JSON.parse(data));
+//         // client.connect(function(err){
+//         //     if (err) throw err;
+//         //     // var stream = client.query(pgStream.from(`COPY whiteiqp FROM STDIN (DELIMITER '@' CSV QUOTE '$' ENCODING 'LATIN1')`));
+//         //     // var fileStream = fs.createReadStream(path.join(__dirname,'Scid vs PC-4.24','bin','whiteiqp.csv'));
+//         //     // fileStream.pipe(stream);
+//         //     // client.end();
+//         //     let results = [];
+//         //     let count =0;
+//         //     const query = 'INSERT INTO "whiteiqp" (gamenumber,whitename,blackname,whiteelo,blackelo,result) VALUES ($1,$2,$3,$4,$5,$6)';
+//         //     //for tomorrow, do the insert in the data event and clear the results array to deal with memory issues. The insert can happen after x amount of reads
+//         //     fs.createReadStream(path.join(__dirname,'Scid vs PC-4.24','bin','whiteiqp.csv'))
+//         //         .pipe(csvParser({separator: '@',quote: "$"}))
+//         //         .on('data', async (row) => {
+//         //             // write to table every 1000 rows read
+//         //             results.push(row);
+//         //             count++;
+//         //             if(count == 1000){
+//         //                 await Promise.all(
+//         //                     results.map(async row => {
+//         //                         const {gamenumber,whitename,blackname,whiteelo,blackelo,result} = row;
+//         //                         const values = [gamenumber,whitename,blackname,whiteelo,blackelo,result];
+//         //                         await client.query(query,values);
+//         //                     })
+    
+//         //                 );
+//         //                 count = 0;
+//         //                 results = [];
+
+
+//         //             }
+//         //         })
+//         //         .on('end', async () => {
+//         //             // const query = 'INSERT INTO "whiteiqp" (gamenumber,whitename,blackname,whiteelo,blackelo,result) VALUES ($1,$2,$3,$4,$5,$6)';
+//         //             if (count != 0)
+//         //             {
+//         //                 await Promise.all(
+//         //                     results.map(async row => {
+//         //                         const {gamenumber,whitename,blackname,whiteelo,blackelo,result} = row;
+//         //                         const values = [gamenumber,whitename,blackname,whiteelo,blackelo,result];
+//         //                         await client.query(query,values);
+//         //                     })
+
+//         //                 );
+//         //             }
+//         //             client.end();
+//         //         });
+
+//         // });
+//         // var stream = client.query(pgStream.from(`COPY whiteiqp FROM STDIN (DELIMITER '@' CSV QUOTE '$' ENCODING 'LATIN1')`));
+//         // var fileStream = fs.createReadStream(path.join(__dirname,'Scid vs PC-4.24','bin','whiteiqp.csv'));
+//         // fileStream.pipe(stream);
+                
+//     }
+//     else{
+//         console.log("error reading file: ",err);
+//     }
+// });
+
+
+
 
 // getGameInfo("whiteiqp",0);
 // getPgn("LumbrasGigaBase",3);
@@ -162,25 +202,6 @@ query('LumbrasGigaBase','-wq@0 2@-bq@0 2@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4
 
 
 
-//working example:
-
-// const child = spawn('node',[],options);
-// child.stdout.on('data', (data) => {
-//     console.log(`stdout: "${data}"`);
-// });
-
-// child.stdin.write("for(let i = 0; i < 100;i++){console.log(i);}\n");
-// child.stdin.write("console.log(`KAKA`);\n");
-// child.stdin.end(); // EOF
-
-// child.on('close', (code) => {
-//     console.log(`Child process exited with code ${code}.`);
-// });
-
-// child.stdout.on('data', (data) => {
-//     console.log(`child stdout:\n${data}`);
-//     console.log("PLZ");
-//     });
 
 
 
