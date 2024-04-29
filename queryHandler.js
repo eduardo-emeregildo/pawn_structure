@@ -1,12 +1,6 @@
 //this file contains all the functions that interact with the tcl script files
 
-
-//FOR TOMORROW: figure out what to do with the deleteTables function. My idea was to track the current table with each user and
-// delete that corresponding table once they exit. On the case where user creates multiple tables, only the current one is needed,
-// so delete prior tables.
-
-
-//To do: write all functions
+//To do: incorporate these functions to the routes
 //*******make a test file after I finish all functions before adding them to the routes********.
 const {spawn} = require('child_process');
 const path = require('path');
@@ -122,15 +116,42 @@ function getGameInfo(tablename,offset){
 
 }
 
-function deleteTables(){
-//this function deletes the tables which the current user has made,
-//might need another script that periodically checks for duplicate files and removes them
-//reason is if multiple users made the same query, no need for dups to exists
+function deleteTable(tablename){
+// deletes custom table that the user has made once they exit or if they make another custom table.
+// Only one custom table will be in the db per user. On the front end it will keep track of the current custom table
+// so the tablename will be retrieved from there.
+// the front end will receive the JWT from the query function
+
+// All this JWT stuff will be handled on the route. If auth was successful, then call this function
+
+// One thing im also seeing is if two users are using a custom table, and one leaves, in this case table shouldnt be deleted since
+// there is a user using it
+
+fs.readFile('auth.json', 'utf8', (err, data) => {
+    if (!err) {
+        const client = new Client(JSON.parse(data));
+        client.connect();
+        client.query(`DROP TABLE ${tablename}` , (err,res) =>{
+            if(!err){
+                console.log(`Deleted ${tablename} table!`)
+            }
+            else{
+                console.log(err.message);
+            }
+            client.end();
+        })
+    }
+    else{
+        console.log(err);
+    }
+});
 
 }
 
 
-// query('LumbrasGigaBase','-wq@0 2@-bq@0 2@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@1 8@-bp@0 8@-wb@0 2@-bb@0 2@-pattern@1 wp d ?@-pattern@0 wp c ?@-pattern@0 wp e ?','whiteiqp.csv');
+query('LumbrasGigaBase','-wq@0 2@-bq@0 2@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@1 8@-bp@0 8@-wb@0 2@-bb@0 2@-pattern@1 wp d ?@-pattern@0 wp c ?@-pattern@0 wp e ?','whiteiqp.csv');
 
 // getGameInfo("whiteiqp",0);
 // getPgn("LumbrasGigaBase",3);
+
+// deleteTable("whiteiqp");
