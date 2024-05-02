@@ -2,10 +2,13 @@
 
 //To do: incorporate these functions to the routes
 //*******make a test file after I finish all functions before adding them to the routes********.
+
+// https://stackoverflow.com/questions/23339907/returning-a-value-from-callback-function-in-node-js
+// for tomorrow, make getGameInfo return the rows of the query and not null, then queck with postman to see if the get/tablename/offset route works
 const {spawn} = require('child_process');
 const path = require('path');
 const fs = require('fs');
-const {Client,Pool} = require('pg');
+const {Client} = require('pg');
 
 const options = { cwd: path.join(__dirname,'Scid vs PC-4.24','bin')};
 
@@ -91,29 +94,37 @@ function getPgn(baseName,gameNumber){
 
 }
 
-function getGameInfo(tablename,offset){
-// gets the game info of the tablename specified, gets 15 game info given the offset
-// offset = 0 gets the first 15 games, offset 1, gets games 16-30 etc 
-    fs.readFile('auth.json', 'utf8', (err, data) => {
-        if (!err) {
-            const client = new Client(JSON.parse(data));
-            client.connect();
-            client.query(`SELECT * FROM ${tablename} LIMIT 15 OFFSET ${offset*15}` , (err,res) =>{
-                if(!err){
-                    console.log(res.rows);
-                }
-                else{
-                    console.log(err.message);
-                }
-                client.end();
-            })
-        }
-        else{
-            console.log(err);
-        }
-    });
+// async function getGameInfo(tablename,offset){
+// // gets the game info of the tablename specified, gets 15 game info given the offset
+// // offset = 0 gets the first 15 games, offset 1, gets games 16-30 etc
+// let output;
+//     const auth = await fs.readFile('auth.json', 'utf8', async(err, data) => {
+//         if (!err) {
+//             const client = new Client(JSON.parse(data));
+//             await client.connect();
+//             output = await client.query(`SELECT * FROM ${tablename} LIMIT 15 OFFSET ${offset*15}`);
+//             console.log("data is: ",output.rows);
+//             await client.end();
+//         }
+//         else{
+//             console.log(err);
+//         }
+//     });
+//     return output;
 
 
+
+// }
+
+
+async function getGameInfo(tablename,offset){
+    const result = fs.readFileSync('auth.json','utf8');
+    const client = new Client(JSON.parse(result));
+    await client.connect();
+    let output = await client.query(`SELECT * FROM ${tablename} LIMIT 15 OFFSET ${offset*15}`);
+    // console.log("data is: ", output.rows);
+    await client.end();
+    return output.rows;
 }
 
 function deleteTable(tablename){
@@ -149,9 +160,21 @@ fs.readFile('auth.json', 'utf8', (err, data) => {
 }
 
 
-query('LumbrasGigaBase','-wq@0 2@-bq@0 2@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@1 8@-bp@0 8@-wb@0 2@-bb@0 2@-pattern@1 wp d ?@-pattern@0 wp c ?@-pattern@0 wp e ?','whiteiqp.csv');
+// query('LumbrasGigaBase','-wq@0 2@-bq@0 2@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@1 8@-bp@0 8@-wb@0 2@-bb@0 2@-pattern@1 wp d ?@-pattern@0 wp c ?@-pattern@0 wp e ?','whiteiqp.csv');
 
-// getGameInfo("whiteiqp",0);
+// async function test(){
+//     let ass = await getGameInfo("whiteiqp",0);
+//     console.log("ass is: ",ass);
+// }
+// test();
+
 // getPgn("LumbrasGigaBase",3);
 
 // deleteTable("whiteiqp");
+
+module.exports = {
+    deleteTable,
+    query,
+    getGameInfo,
+    getPgn
+}
