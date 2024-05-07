@@ -16,7 +16,6 @@ async function query(baseName,query,filename){
     let child = spawnSync('tcscid',[path.join(__dirname,'query.tcl'), baseName,query,filename],options);
     console.log("Now making table on sql db..");
     const result = fs.readFileSync('auth.json', 'utf8');
-    //for tomorrow, make the code below this follow async/await, like in the getGameInfo function
     const client = new Client(JSON.parse(result));
     await client.connect();
     await client.query(`CREATE TABLE ${filename.slice(0,-4)}(
@@ -28,7 +27,7 @@ async function query(baseName,query,filename){
         result CHAR(1)
     )`);
     await client.end();
-    
+
     let sql = spawnSync('psql',['-U','postgres','-a','-w','-d','pawn_structure', '-c',
     `\\COPY ${filename.slice(0,-4)} FROM 'C:\\Users\\emere\\Desktop\\pawn_structure_project\\pawn_structure\\Scid vs PC-4.24\\bin\\${filename}' DELIMITER '@' CSV QUOTE '$' ENCODING 'LATIN1';`]);
 
@@ -39,24 +38,11 @@ async function query(baseName,query,filename){
 
 function getPgn(baseName,gameNumber){
     console.log("Running child process..");
-    let child = spawn('tcscid',[path.join(__dirname,'getPgn.tcl'), baseName,gameNumber],options);
-
-    child.stdout.on('data', (data) => {
-        console.log(`child stdout:\n${data}`);
-        });
-
-    child.on('close', function (code, signal) {
-        console.log('child process exited with ' +
-                    `code ${code} and signal ${signal}`);
-      });
-    
-    child.on('error' , (error) => console.log(`error: ${error}`));
-    
-    child.stderr.on('data', (data) => {
-    console.error(`child stderr:\n${data}`);
-    });
-
+    let child = spawnSync('tcscid',[path.join(__dirname,'getPgn.tcl'), baseName,gameNumber],options);
+    return child.stdout.toString();
 }
+
+
 async function getGameInfo(tablename,offset){
 // gets the game info of the tablename specified, gets 15 game info given the offset
 // offset = 0 gets the first 15 games, offset 1, gets games 16-30 etc
@@ -112,9 +98,11 @@ fs.readFile('auth.json', 'utf8', (err, data) => {
 // }
 // test();
 
-// getPgn("LumbrasGigaBase",3);
+// let kaka = getPgn("LumbrasGigaBase",3);
+// console.log(kaka);
 
 // deleteTable("whiteiqp");
+
 
 module.exports = {
     deleteTable,
