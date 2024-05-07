@@ -17,12 +17,19 @@ router.get('/:tableName/:offset', async (req,res,next) => {
         });
 });
 
-router.post('/', (req,res,next) => {
+router.post('/', async(req,res,next) => {
     //Here write the logic to execute the query tcl, just call query function from queries_test.js
-    res.status(200).json(
+    await queryHandler.query(req.body.baseName,req.body.query,req.body.filename);
+    console.log("QUERY FINISHED!!!");
+
+    res.status(201).json(
         {
-            message: "Handling POST Requests to /queries"
+            message: "Handling POST Requests to /queries",
         });
 });
+
+router.delete('/', (req, res) => { 
+        res.send("DELETE Request Called"); 
+    }) 
 
 module.exports = router;

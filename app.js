@@ -7,6 +7,10 @@ const queryRoutes = require('./api/routes/queries');
 //         message: "It works :P"
 //     });
 // });
+app.use(express.json());
+app.use(express.urlencoded({
+  extended: true
+}));
 
 app.use('/queries', queryRoutes);
 
