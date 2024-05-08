@@ -28,8 +28,14 @@ router.post('/', async(req,res,next) => {
         });
 });
 
-router.delete('/', (req, res) => { 
-        res.send("DELETE Request Called"); 
+router.delete('/:tableName', async(req, res) => {
+    // will need some JWT, also the base tables can never be deleted. Only the custom table to according user can be deleted
+    await queryHandler.deleteTable(req.params.tableName);
+
+    res.status(200).json(
+        {
+            message: `Deleted ${req.params.tableName} table`
+        });
     }) 
 
 module.exports = router;

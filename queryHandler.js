@@ -55,7 +55,7 @@ async function getGameInfo(tablename,offset){
     return output.rows;
 }
 
-function deleteTable(tablename){
+async function deleteTable(tablename){
 // deletes custom table that the user has made once they exit or if they make another custom table.
 // Only one custom table will be in the db per user. On the front end it will keep track of the current custom table
 // so the tablename will be retrieved from there.
@@ -66,25 +66,12 @@ function deleteTable(tablename){
 // One thing im also seeing is if two users are using a custom table, and one leaves, in this case table shouldnt be deleted since
 // there is a user using it
 
-fs.readFile('auth.json', 'utf8', (err, data) => {
-    if (!err) {
-        const client = new Client(JSON.parse(data));
-        client.connect();
-        client.query(`DROP TABLE ${tablename}` , (err,res) =>{
-            if(!err){
-                console.log(`Deleted ${tablename} table!`)
-            }
-            else{
-                console.log(err.message);
-            }
-            client.end();
-        })
-    }
-    else{
-        console.log(err);
-    }
-});
-
+    const result = fs.readFileSync('auth.json','utf8');
+    const client = new Client(JSON.parse(result));
+    await client.connect();
+    await client.query(`DROP TABLE ${tablename}`);
+    await client.end();
+    console.log(`TABLE ${tablename} deleted`);
 }
 
 
@@ -98,8 +85,8 @@ fs.readFile('auth.json', 'utf8', (err, data) => {
 // }
 // test();
 
-// let kaka = getPgn("LumbrasGigaBase",3);
-// console.log(kaka);
+// let ok = getPgn("LumbrasGigaBase",3);
+// console.log(ok);
 
 // deleteTable("whiteiqp");
 
