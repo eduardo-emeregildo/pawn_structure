@@ -1,10 +1,7 @@
 //this file contains all the functions that interact with the tcl script files
 
-//To do: incorporate these functions to the routes
-//*******make a test file after I finish all functions before adding them to the routes********.
-
-// for tomorrow, finish the other routes, add JWT signing, add error handling
-const {spawn,spawnSync} = require('child_process');
+// for tomorrow, test jwt protection some more, add more error handling, add the default tables in db, start working on front end
+const {spawnSync} = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const {Client} = require('pg');
@@ -18,7 +15,7 @@ async function query(baseName,query,filename){
     const result = fs.readFileSync('auth.json', 'utf8');
     const client = new Client(JSON.parse(result));
     await client.connect();
-    await client.query(`CREATE TABLE ${filename.slice(0,-4)}(
+    await client.query(`CREATE TABLE IF NOT EXISTS ${filename.slice(0,-4)}(
         gamenumber INTEGER,
         whitename VARCHAR(15),
         blackname VARCHAR(15),
@@ -63,8 +60,16 @@ async function deleteTable(tablename){
 
 // All this JWT stuff will be handled on the route. If auth was successful, then call this function
 
-// One thing im also seeing is if two users are using a custom table, and one leaves, in this case table shouldnt be deleted since
-// there is a user using it
+// deletetable should be protected, also getPgn and getGameInfo should be protected if the table you are searching is a custom table
+
+
+//********************* */
+// To keep this api stateless, I cant do the approach of keeping track of which user created which table
+// What I will do to delete a table is use JWT to authenticate who can delete tables.
+// This api should only be accessed by the client url and not allow anyone else to access it. This is I can manage the tables that exist in db.(If anyone can access the api, they can just send query requests and never call delete table, which would bloat the db)
+//This is something im going to have to change with CORS
+
+//The duplicate table case is something I will have to address later as well.
 
     const result = fs.readFileSync('auth.json','utf8');
     const client = new Client(JSON.parse(result));
@@ -85,12 +90,12 @@ async function deleteTable(tablename){
 // }
 // test();
 
+
+
 // let ok = getPgn("LumbrasGigaBase",3);
 // console.log(ok);
 
 // deleteTable("whiteiqp");
-
-
 module.exports = {
     deleteTable,
     query,
