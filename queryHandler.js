@@ -1,8 +1,6 @@
 //this file contains all the functions that interact with the tcl script files
 
-// for tomorrow, test jwt protection some more, add more error handling, add the default tables in db, start working on front end
-
-//work on query.tcl to throw error if result of query is no games
+// for tomorrow, test jwt protection some more, add more error handling, add the default tables in db, figure out naming convention for custom tables, start working on front end
 const {spawnSync} = require('child_process');
 const path = require('path');
 const fs = require('fs');
@@ -88,9 +86,18 @@ async function deleteTable(tablename){
     const result = fs.readFileSync('auth.json','utf8');
     const client = new Client(JSON.parse(result));
     await client.connect();
-    await client.query(`DROP TABLE ${tablename}`);
+
+
+    try{
+        await client.query(`DROP TABLE ${tablename}`);
+    }
+    catch(error){
+        await client.end();
+        return false;
+    }
+
     await client.end();
-    console.log(`TABLE ${tablename} deleted`);
+    return true;
 }
 
 

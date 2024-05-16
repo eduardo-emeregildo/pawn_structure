@@ -68,7 +68,23 @@ router.post('/', async(req,res,next) => {
 //req body will be tableName and token, holding the jwt token given 
 router.delete('/:tableName', checkAuth,async(req, res) => {
     // will need some JWT, also the base tables can never be deleted. Only the custom table to according user can be deleted
-    await queryHandler.deleteTable(req.params.tableName);
+    if(req.params.tableName in queryHandler.defaultTables){
+        return res.status(401).json(
+            {
+                message: `Auth failed`
+            });
+
+    }
+
+    const result = await queryHandler.deleteTable(req.params.tableName);
+
+    if(!result){
+        return res.status(404).json(
+            {
+                message: `${req.params.tableName} doesnt exist`
+            });
+
+    }
 
     res.status(200).json(
         {
