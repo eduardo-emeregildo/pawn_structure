@@ -4,15 +4,13 @@ const queryHandler = require("../../queryHandler");
 const jwt = require('jsonwebtoken');
 const checkAuth = require("../middleware/checkAuth");
 
-const defaultTables = {
-    whiteiqp: true
-}
+
 
 // get pgn given db name(scid) and gamenumber
 //if tableName is not in default tables, will check auth header
 router.get('/:baseName/:gameNumber/:tableName', (req,res,next) => {
 
-    if(!(req.params.tableName in defaultTables) ){
+    if(!(req.params.tableName in queryHandler.defaultTables) ){
         try{
             const token = req.headers.authorization.split(" ")[1];
             const decoded = jwt.verify(token,process.env.JWT_KEY);

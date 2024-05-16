@@ -1,6 +1,8 @@
 //this file contains all the functions that interact with the tcl script files
 
 // for tomorrow, test jwt protection some more, add more error handling, add the default tables in db, start working on front end
+
+//work on query.tcl to throw error if result of query is no games
 const {spawnSync} = require('child_process');
 const path = require('path');
 const fs = require('fs');
@@ -8,13 +10,24 @@ const {Client} = require('pg');
 
 const options = { cwd: path.join(__dirname,'Scid vs PC-4.24','bin')};
 
+const defaultTables = {
+    whiteiqp: true
+}
+
 async function query(baseName,query,filename){
     console.log("Running child process..");
     let child = spawnSync('tcscid',[path.join(__dirname,'query.tcl'), baseName,query,filename],options);
+
+
+    if(child.stdout.toString() == "0"){
+        return false;
+    }
+
     console.log("Now making table on sql db..");
     const result = fs.readFileSync('auth.json', 'utf8');
     const client = new Client(JSON.parse(result));
-    await client.connect();
+    await client.connect(); 
+    await client.query(`DROP TABLE IF EXISTS ${filename.slice(0,-4)}`);
     await client.query(`CREATE TABLE IF NOT EXISTS ${filename.slice(0,-4)}(
         gamenumber INTEGER,
         whitename VARCHAR(15),
@@ -30,6 +43,7 @@ async function query(baseName,query,filename){
 
     fs.unlinkSync(path.join(__dirname,'Scid vs PC-4.24','bin',filename));
     console.log("Deleted csv");
+    return true;
 
 }
 
@@ -69,7 +83,7 @@ async function deleteTable(tablename){
 // This api should only be accessed by the client url and not allow anyone else to access it. This is I can manage the tables that exist in db.(If anyone can access the api, they can just send query requests and never call delete table, which would bloat the db)
 //This is something im going to have to change with CORS
 
-//The duplicate table case is something I will have to address later as well.
+//The duplicate table case is something I will have to address later as well. might just make it so everyone has their own unique table.
 
     const result = fs.readFileSync('auth.json','utf8');
     const client = new Client(JSON.parse(result));
@@ -85,8 +99,8 @@ async function deleteTable(tablename){
 // async function test(){
 //     // let ass = await getGameInfo("whiteiqp",0);
 //     // console.log("ass is: ",ass);
-//     await query('LumbrasGigaBase','-wq@0 2@-bq@0 2@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@1 8@-bp@0 8@-wb@0 2@-bb@0 2@-pattern@1 wp d ?@-pattern@0 wp c ?@-pattern@0 wp e ?','whiteiqp.csv');
-//     console.log("DONE WITH QUERY FUNCTION");
+//     let res = await query('LumbrasGigaBase','-wq@0 2@-bq@0 2@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@1 8@-bp@0 8@-wb@0 2@-bb@0 2@-pattern@1 wp d 1','whiteiqp.csv');
+//     console.log("DONE WITH QUERY FUNCTION", res);
 // }
 // test();
 
@@ -100,5 +114,6 @@ module.exports = {
     deleteTable,
     query,
     getGameInfo,
-    getPgn
+    getPgn,
+    defaultTables
 }

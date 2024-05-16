@@ -5,16 +5,13 @@ const jwt = require('jsonwebtoken');
 const checkAuth = require("../middleware/checkAuth");
 
 //names of all default tables, fill once I've added default tables to db
-const defaultTables = {
-    whiteiqp: true
-}
 
 
 // get gameinfo given the table name and offset, might need to add some logic to cover the case of custom table
 // if custom table, will check header for auth token 
 router.get('/:tableName/:offset', async (req,res,next) => {
 
-    if(!(req.params.tableName in defaultTables) ){
+    if(!(req.params.tableName in queryHandler.defaultTables) ){
         try{
             const token = req.headers.authorization.split(" ")[1];
             const decoded = jwt.verify(token,process.env.JWT_KEY);
@@ -43,7 +40,12 @@ router.get('/:tableName/:offset', async (req,res,next) => {
 //req body is json with fields baseName,query,filename
 router.post('/', async(req,res,next) => {
     //Here write the logic to execute the query tcl, just call query function from queries_test.js
-    await queryHandler.query(req.body.baseName,req.body.query,req.body.filename);
+    const result = await queryHandler.query(req.body.baseName,req.body.query,req.body.filename);
+
+    if(!result){
+        return res.status(204).json();
+    }
+    console.log("result");
     console.log("QUERY FINISHED!!!");
     const token = jwt.sign(
         {
