@@ -74,6 +74,8 @@ async function deleteTable(tablename){
 
 // deletetable should be protected, also getPgn and getGameInfo should be protected if the table you are searching is a custom table
 
+// the custom table should have a unique name per client
+
 
 //********************* */
 // To keep this api stateless, I cant do the approach of keeping track of which user created which table
