@@ -4,10 +4,13 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Roboto", "sans-serif"],
+        sans: ["Inter", "sans-serif"],
       },
-      gridTemplateColumns: {
-        "70/30": "70% 28%",
+      // gridTemplateColumns: {
+      //   "70/30": "70% 28%",
+      // },
+      colors: {
+        // "background-color": "#212526",
       },
     },
   },
