@@ -1,27 +1,27 @@
 import React from "react";
 import { SiChessdotcom } from "react-icons/si";
+import background from "../assets/chess-background-4-copy.jpg";
 
 const Title = () => {
   return (
-    <>
-      <div className=" flex justify-center m-2 gap-6">
-        <SiChessdotcom className="text-white" size={70} />
-        <h1 className="text-5xl text-center m-2 text-gray-50 ">
-          Pawn Structure Search
-        </h1>
-        <SiChessdotcom className="text-black" size={70} />
+    <div
+      className="hero min-h-screen"
+      style={{
+        backgroundImage: `url(${background})`,
+      }}
+    >
+      {/* <div className="hero-overlay bg-opacity-60"></div> */}
+      <div className="hero-content text-center text-neutral-content">
+        <div className="max-w-md">
+          <h1 className="mb-5 text-6xl font-bold">Pawn Structure Search</h1>
+          <p className="mb-5 text-xl">
+            Understand chess at a deeper level. Search through 13+ million games
+            by their corresponding pawn structure.
+          </p>
+          <button className="btn btn-primary">Learn More</button>
+        </div>
       </div>
-
-      <p className="text-gray-50 text-center">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-        mollit anim id est laborum
-      </p>
-    </>
+    </div>
   );
 };
 
