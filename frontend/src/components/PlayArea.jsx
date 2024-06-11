@@ -1,8 +1,9 @@
 import React from "react";
+import Modal from "./Modal";
 import { Chessboard } from "react-chessboard";
 import { SlArrowDown } from "react-icons/sl";
 
-// Look into using daisyui/shadcn/flowbite for styling components, use to include a hero section
+// For tomorrow, center the card inside the modal, set all the common ps dynamically
 
 const PlayArea = () => {
   return (
@@ -25,14 +26,14 @@ const PlayArea = () => {
             className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
           >
             <li>
-              <a>White IQP</a>
+              <Modal modalName={"White IQP"} />
             </li>
             <li>
               <a>Maroczy Bind</a>
             </li>
           </ul>
         </div>
-        <button className="btn m-1">Custom Pawn Structure</button>
+        <button className="btn m-1 align-top">Custom Pawn Structure</button>
         {/* Move area */}
         <div className="bg-gray-600 h-4/6 my-2 text-white rounded-sm ">
           The moves go here
