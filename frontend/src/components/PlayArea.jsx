@@ -2,8 +2,9 @@ import React from "react";
 import Modal from "./Modal";
 import { Chessboard } from "react-chessboard";
 import { SlArrowDown } from "react-icons/sl";
+// import plans from "../plans.json";
 
-// For tomorrow, center the card inside the modal, set all the common ps dynamically
+// For tomorrow, dynamically set the modal/plans, fix bug of weird animation that happens when you click on a pawn structure, try to make common ps, custom buttons align
 
 const PlayArea = () => {
   return (
@@ -23,13 +24,48 @@ const PlayArea = () => {
           </div>
           <ul
             tabIndex={0}
-            className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
+            className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box h-52 overflow-auto block"
           >
             <li>
-              <Modal modalName={"White IQP"} />
+              <Modal modalName={"IQP"} />
             </li>
             <li>
-              <a>Maroczy Bind</a>
+              <Modal modalName={"Hanging Pawns"} />
+            </li>
+            <li>
+              <Modal modalName={"Carlsbad"} />
+            </li>
+            <li>
+              <Modal modalName={"Slav Formation"} />
+            </li>
+            <li>
+              <Modal modalName={"Stonewall"} />
+            </li>
+
+            <li>
+              {/* Najdorf type 2 in book */}
+              <Modal modalName={"Sicilian"} />
+            </li>
+
+            <li>
+              <Modal modalName={"Maroczy Bind"} />
+            </li>
+
+            <li>
+              <Modal modalName={"Benoni"} />
+            </li>
+            <li>
+              {/* KID Type 3 in the book */}
+              <Modal modalName={"King's Indian"} />
+            </li>
+
+            <li>
+              {/* French type 3 */}
+              <Modal modalName={"French Advance"} />
+            </li>
+
+            <li>
+              <Modal modalName={"Closed Ruy Lopez"} />
             </li>
           </ul>
         </div>

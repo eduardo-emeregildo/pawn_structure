@@ -1,0 +1,63 @@
+[
+  {
+    "name": "Isolated Queens Pawn (IQP)",
+    "description": "This structure is defined by a pawn on the d file that has no neighboring pawns to protect it.",
+    "whitePlans": [
+      "Create a kingside attack. Most standard plans will include the moves Ne5,Bg5 and the battery Qd3-Bc2. In some cases a piece sacrifice on the kingside is needed to break through. Rooks are typically placed on e1 and d1 (or c1), and a rook transfer via the third rank is possible",
+
+      "Break in the center with d4-d5, trading pawns and opening lines with an initiative (sometimes this break can be achieved with a pawn sacrifice with the same purpose)"
+    ],
+    "blackPlans": [
+      "Trade pieces to win an endgame. In particular, exchange white's good bishop (the light squared bishop)",
+      "Place a knight on d5. This blockading square prevents the central break d4-d5, and controls key squares. In an endgame, a rook, bishop or king would be strong on this square"
+    ]
+  },
+
+  {
+    "name": "Hanging Pawns",
+    "description": "This structure is defined by connected c and d pawns that cannot be reinforced by pawns. This structure is closely related to the IQP.",
+    "whitePlans": [
+      "Create a kingside attack. Most standard plans will include the moves Ne5, Bc2, Qd3 and a rook transfer through the third rank, via Re1-Re3-Rh3",
+
+      "Break in the center with d4-d5, opening lines to open lines or to create a strong passed pawn on the d file"
+    ],
+    "blackPlans": [
+      "Trade pieces to win an endgame. The hanging pawns tend to be a serious liability in the endgame",
+      "Apply pressure to the central pawns. Blockade them if possible",
+      "Break the handing pawns, either with the b5 or e5 pawn thrust. These breaks are difficult to achieve, especially because an experienced player will prevent them. Successfully achieving this plan transforms the game into an IQP position"
+    ]
+  },
+
+  {
+    "name": "Carlsbad",
+    "description": "This pawn structure is prevalent in many lines of the Exchange Queens Gambit. This structure can be reached in the exchange Caro-Kann as well, but with reversed colors",
+    "whitePlans": [
+      "Aim for a minority attack with b2-b4-b5 to create queenside weaknesses.",
+      "Try to break in the center with f2-f3 and e3-e4 (sometimes e3-e4 directly) gaining space and increasing the tension"
+    ],
+    "blackPlans": [
+      "Place a knight onf e4, which from there controls key squares and supplements a kingside attack. This plan is not always possible because white has the option of playing f2-f3",
+      "Try to play b6 followed by c5 to chip at the strong d4 pawn. This will result in a transformation to the hanging pawns structure. Sometimes c5 can be played directly, which likely transposes to the IQP",
+      "Play b7-b5 one white has b2-b4 to create a firm outpost on the c4 square and to slow down the minority. This plan is less common because it creates a weakness on c6."
+    ]
+  },
+
+  {
+    "name": "Slav Formation",
+    "description": "This structure is often reached from the Semi Slav as well as the Queen's Gambit Accepted. White typically has the advantage due to the space his d4 pawn gives him",
+    "whitePlans": [
+      "Create a kingside attack, with h2-h4-h5-h6(or hxg6) and possible e4-e4-e5",
+
+      "Place knights on the e5 and c5 squares, which control the center",
+      "Play e4-e5 to fix the center and control the d6 square",
+      "Create a minority attack with a2-a4 and b2-b4-b5, in order to create queenside weaknesses",
+      "Preventing the c5 break with b2-b4. This pawn advance also gains queenside space which can squeeze black"
+    ],
+    "blackPlans": [
+      "Achieve the c5 break, which gives the pieces more scope. The pawn structure can transform into a symmetrical one after dxc5, or an IQP ..cxd4",
+      "Achieve the e5 break, undermining the d4 pawn and gaining scope for the pieces",
+      "Exert pressure on the d4 pawn once e3-e4 has been played",
+      "Disrupting white's center and gaining some influence on the center with f7-f5"
+    ]
+  }
+]
