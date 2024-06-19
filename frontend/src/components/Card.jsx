@@ -1,19 +1,14 @@
 import React from "react";
-import whiteIQP from "../assets/IQP.gif";
-
-const Card = () => {
+const Card = ({ name, description, img }) => {
   return (
     <div className="card w-96 bg-base-100 shadow-xl">
       <figure>
-        <img src={whiteIQP} alt="Chessboard" />
+        <img src={`/src/assets/${img}.gif`} alt={`${name} pawn structure`} />
       </figure>
       <div className="card-body">
-        <h2 className="card-title">Isolated Queens Pawn (IQP)</h2>
-        <p>
-          This structure is defined by a pawn on the d file that has no
-          neighboring pawns to protect it.
-        </p>
-        <div className="card-actions justify-end">
+        <h2 className="card-title">{name}</h2>
+        <p>{description}</p>
+        <div className="card-actions justify-end pt-1">
           <button className="btn btn-primary">View Games</button>
         </div>
       </div>
