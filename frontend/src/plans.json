@@ -23,7 +23,7 @@
     "whitePlans": [
       "Create a kingside attack. Most standard plans will include the moves Ne5, Bc2, Qd3 and a rook transfer through the third rank, via Re1-Re3-Rh3",
 
-      "Break in the center with d4-d5, opening lines to open lines or to create a strong passed pawn on the d file"
+      "Break in the center with d4-d5 to open lines or to create a strong passed pawn on the d file"
     ],
     "blackPlans": [
       "Trade pieces to win an endgame. The hanging pawns tend to be a serious liability in the endgame",
@@ -42,7 +42,7 @@
       "Try to break in the center with f2-f3 and e3-e4 (sometimes e3-e4 directly) gaining space and increasing the tension"
     ],
     "blackPlans": [
-      "Place a knight onf e4, which from there controls key squares and supplements a kingside attack. This plan is not always possible because white has the option of playing f2-f3",
+      "Place a knight on e4, which from there controls key squares and supplements a kingside attack. This plan is not always possible because white has the option of playing f2-f3",
       "Try to play b6 followed by c5 to chip at the strong d4 pawn. This will result in a transformation to the hanging pawns structure. Sometimes c5 can be played directly, which likely transposes to the IQP",
       "Play b7-b5 one white has b2-b4 to create a firm outpost on the c4 square and to slow down the minority. This plan is less common because it creates a weakness on c6."
     ]
@@ -73,7 +73,7 @@
     "id": 4,
     "img": "Stonewall",
     "name": "Stonewall",
-    "description": "This structure is often reached from the Dutch Defense, the Slav or the Catalan. It has the chracteristic pawns on d5,e6 and f5.",
+    "description": "This structure is often reached from the Dutch Defense, the Slav or the Catalan. It has the characteristic pawns on d5,e6 and f5.",
     "whitePlans": [
       "Obtain control of the e5 square, as it is an outpost. It would be ideal to place a knight on this square",
       "Trade dark squared bishops, exacerbating black's weak dark squares",

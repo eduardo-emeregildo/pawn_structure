@@ -7,10 +7,17 @@ const Card = ({ name, description, img }) => {
       </figure>
       <div className="card-body">
         <h2 className="card-title">{name}</h2>
-        <p>{description}</p>
-        <div className="card-actions justify-end pt-1">
-          <button className="btn btn-primary">View Games</button>
-        </div>
+        <p className="tracking-wide">{description}</p>
+        {/* <div className="card-actions justify-end pt-1">
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              console.log(id);
+            }}
+          >
+            View Games
+          </button>
+        </div> */}
       </div>
     </div>
 

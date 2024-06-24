@@ -1,7 +1,27 @@
-import React from "react";
+import { useState, useEffect } from "react";
+// import ClipLoader from "react-spinners/ClipLoader";
 import Card from "./Card";
+import Spinner from "./Spinner";
+import Table from "./Table";
+import { toast } from "react-toastify";
 
-const Modal = ({ planObj }) => {
+const Modal = ({ planObj, fetchGames }) => {
+  // const [games, setGames] = useState([]);
+  // useEffect(() => {
+  //   const fetchGames = async () => {
+  //     try {
+  //       const res = await fetch("api/IQP/0");
+  //       const data = await res.json();
+  //       setGames(data.output);
+  //     } catch (error) {
+  //       console.log("Error fetching data:DDD", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchGames();
+  // }, []);
   // let name = "";
   // let description = "";
   return (
@@ -16,7 +36,7 @@ const Modal = ({ planObj }) => {
       >
         {planObj.name}
       </button>
-      <dialog id={planObj.id} className="modal ">
+      <dialog id={planObj.id} className="modal">
         <div className="modal-box w-11/12 max-w-5xl">
           <div className="flex justify-around">
             <Card
@@ -61,7 +81,34 @@ const Modal = ({ planObj }) => {
           <div className="modal-action">
             <form method="dialog">
               {/* if there is a button, it will close the modal */}
-              <button className="btn">Close</button>
+              <button
+                className="btn btn-primary"
+                onClick={async () => {
+                  // if (loading) {
+                  //   <Spinner loading={loading} />;
+                  // }
+                  try {
+                    const res = await fetch("api/queries/IQP/0");
+                    const data = await res.json();
+                    console.log("res is: ", data);
+                    fetchGames(data.output);
+                    // setGames(data.output);
+                    toast.success("Games loaded succesfully");
+                    //somehow have to set tablename state in table component to the corresponding tablename(data.tableName)
+                  } catch (error) {
+                    console.log("Error fetching data:DDD", error);
+                    toast.error("Error fetching games");
+                  }
+                  // finally {
+                  //   setLoading(false);
+                  // }
+                }}
+              >
+                View Games
+              </button>
+              <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                ✕
+              </button>
             </form>
           </div>
         </div>

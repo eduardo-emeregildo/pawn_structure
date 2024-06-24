@@ -1,13 +1,22 @@
-import React from "react";
+import { useState } from "react";
 import Modal from "./Modal";
 import Table from "./Table";
 import { Chessboard } from "react-chessboard";
 import { SlArrowDown } from "react-icons/sl";
 import plans from "../plans.json";
 
-// For tomorrow, dynamically set the modal/planObj fix bug of weird animation that happens when you click on a pawn structure, try to make common ps, custom buttons align
+// show the results of api on table, create all the other tables for common pawn structures, make get request correspond to each option , get chessboard to work, fix bug of weird animation that happens when you click on a pawn structure, try to make common ps, custom buttons align
 
 const PlayArea = () => {
+  const [games, setGames] = useState([]);
+
+  const fetchGames = (gamesArray) => {
+    // const res = await fetch("api/queries/IQP/0");
+    // const data = await res.json();
+    // return data.output;
+    setGames(gamesArray);
+  };
+
   return (
     <div className="flex justify-evenly bg-[#101014] py-10 h-screen">
       {/* Chessboard */}
@@ -18,8 +27,8 @@ const PlayArea = () => {
       {/* List of games, pawn structure dropdown/button, moves area*/}
 
       <div>
-        <div className="dropdown align-bottom">
-          <div tabIndex={0} role="button" className="btn m-1">
+        <div className="dropdown ">
+          <div tabIndex={0} role="button" className="btn m-1 align-bottom">
             <SlArrowDown />
             Common Pawn Structures
           </div>
@@ -29,7 +38,7 @@ const PlayArea = () => {
           >
             {plans.map((plan) => (
               <li key={plan.id}>
-                <Modal id={plan.id} planObj={plan} />
+                <Modal id={plan.id} planObj={plan} fetchGames={fetchGames} />
               </li>
             ))}
           </ul>
@@ -42,7 +51,7 @@ const PlayArea = () => {
           The moves go here
         </div>
 
-        <Table />
+        <Table games={games} />
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import React from "react";
-import { SiChessdotcom } from "react-icons/si";
+// import { SiChessdotcom } from "react-icons/si";
 import background from "../assets/chess-background-4-copy.jpg";
 
 const Title = () => {

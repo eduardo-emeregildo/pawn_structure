@@ -1,6 +1,6 @@
 import React from "react";
 
-const Table = () => {
+const Table = ({ games }) => {
   return (
     <div className="overflow-x-auto">
       <table className="table bg-white">
@@ -39,6 +39,21 @@ const Table = () => {
             <td>2721</td>
             <td>1-0</td>
           </tr>
+
+          <tr>
+            <td>
+              <button
+                className="btn"
+                onClick={() => {
+                  console.log("games is: ", games);
+                }}
+              >
+                Load more Games
+              </button>
+            </td>
+          </tr>
+
+          {/* <button className="btn m-2">Load More Games</button> */}
         </tbody>
       </table>
     </div>
