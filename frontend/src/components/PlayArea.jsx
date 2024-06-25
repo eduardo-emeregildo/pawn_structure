@@ -18,7 +18,7 @@ const PlayArea = () => {
   };
 
   return (
-    <div className="flex justify-evenly bg-[#101014] py-10 h-screen">
+    <div className="flex justify-evenly bg-[#101014] py-10 min-h-screen ">
       {/* Chessboard */}
       <div>
         <Chessboard boardWidth="650" />

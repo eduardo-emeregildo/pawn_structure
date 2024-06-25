@@ -91,6 +91,7 @@ const Modal = ({ planObj, fetchGames }) => {
                     const res = await fetch("api/queries/IQP/0");
                     const data = await res.json();
                     console.log("res is: ", data);
+                    //runs in the context of PlayArea. This is where games state var is updated in PlayArea
                     fetchGames(data.output);
                     // setGames(data.output);
                     toast.success("Games loaded succesfully");
