@@ -19,7 +19,7 @@
     "id": 1,
     "img": "HP",
     "name": "Hanging Pawns",
-    "description": "This structure is defined by connected c and d pawns that cannot be reinforced by pawns. This structure is closely related to the IQP.",
+    "description": "This structure is defined by connected c and d pawns that cannot be reinforced by pawns. This structure is closely related to the IQP. White has better middlegame prospects due to his spatial edge while black should aim for an endgame, where the hanging pawns will be weak",
     "whitePlans": [
       "Create a kingside attack. Most standard plans will include the moves Ne5, Bc2, Qd3 and a rook transfer through the third rank, via Re1-Re3-Rh3",
 
@@ -43,7 +43,7 @@
     ],
     "blackPlans": [
       "Place a knight on e4, which from there controls key squares and supplements a kingside attack. This plan is not always possible because white has the option of playing f2-f3",
-      "Try to play b6 followed by c5 to chip at the strong d4 pawn. This will result in a transformation to the hanging pawns structure. Sometimes c5 can be played directly, which likely transposes to the IQP",
+      "Try to play ..b6 followed by ..c5 to chip at the strong d4 pawn. This will result in a transformation to the hanging pawns structure. Sometimes ..c5 can be played without ..b6, which likely transposes to an IQP",
       "Play b7-b5 one white has b2-b4 to create a firm outpost on the c4 square and to slow down the minority. This plan is less common because it creates a weakness on c6."
     ]
   },
@@ -163,7 +163,7 @@
     "id": 9,
     "img": "Kid",
     "name": "King's Indian",
-    "description": "This pawn structure is seen mostly in the King's Indian Defense, but can also arise from the Bogo-Indian and the open games. This structure yields play on opposite flanks",
+    "description": "This pawn structure is seen mostly in the main lines of the King's Indian Defense, but can also arise from the Bogo-Indian and the open games. This structure yields play on opposite flanks",
     "whitePlans": [
       "Break on the queenside with c4-c5-cxd6 and invade via the c file",
       "Expand on the queenside with c4-c5-c6, and if black responds with ..b6, invade down the a file after a4-a5-axb6",
@@ -184,11 +184,11 @@
     "id": 10,
     "img": "French",
     "name": "Advanced French",
-    "description": "This structure typically arises from the French or Caro-Kann, but it can be obtained from other opens, one being the Catalan. White tends to play for an attack on the kingside due to his e5 pawn, while black plays on the queenside",
+    "description": "This structure typically arises from the French or Caro-Kann, when gains space with the pawn advance to e5, but it can be obtained from other openings, one being the Catalan. White tends to play for an attack on the kingside due to his e5 pawn, while black plays on the queenside",
     "whitePlans": [
       "Attack the base of black's pawn chain with f4-f5-fxe6",
       "Create a kingside attack with f4-f5-f6, followed by mate threats on the g7 square",
-      "Attack black's kingside with rooks along the third rank, a bishop on the b1-h7 diagonal and a queen on h5. A piece sacrifice on the kingside is often required to break through. Greef gift sacrifices are very common in this structure"
+      "Attack black's kingside with rooks along the third rank, a bishop on the b1-h7 diagonal and a queen on h5. A piece sacrifice on the kingside is often required to break through. Greek gift sacrifices are very common in this structure"
     ],
     "blackPlans": [
       "Attack the base of white's pawn chain, which is white's d4 pawn, with ..c5, ..Nc6 and ..Qb6. In some cases use major pieces to invade down the c file",

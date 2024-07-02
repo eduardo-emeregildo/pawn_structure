@@ -1,29 +1,10 @@
-import { useState, useEffect } from "react";
 // import ClipLoader from "react-spinners/ClipLoader";
 import Card from "./Card";
 import Spinner from "./Spinner";
 import Table from "./Table";
 import { toast } from "react-toastify";
 
-const Modal = ({ planObj, fetchGames }) => {
-  // const [games, setGames] = useState([]);
-  // useEffect(() => {
-  //   const fetchGames = async () => {
-  //     try {
-  //       const res = await fetch("api/IQP/0");
-  //       const data = await res.json();
-  //       setGames(data.output);
-  //     } catch (error) {
-  //       console.log("Error fetching data:DDD", error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchGames();
-  // }, []);
-  // let name = "";
-  // let description = "";
+const Modal = ({ planObj, fetchGames, fetchCaption }) => {
   return (
     <div>
       <button
@@ -88,12 +69,13 @@ const Modal = ({ planObj, fetchGames }) => {
                   //   <Spinner loading={loading} />;
                   // }
                   try {
-                    const res = await fetch("api/queries/IQP/0");
+                    //planObj.img is also the name of the table
+                    const res = await fetch(`api/queries/${planObj.img}/0`);
                     const data = await res.json();
                     console.log("res is: ", data);
                     //runs in the context of PlayArea. This is where games state var is updated in PlayArea
-                    fetchGames(data.output);
-                    // setGames(data.output);
+                    fetchGames(data);
+                    fetchCaption(planObj.name);
                     toast.success("Games loaded succesfully");
                     //somehow have to set tablename state in table component to the corresponding tablename(data.tableName)
                   } catch (error) {

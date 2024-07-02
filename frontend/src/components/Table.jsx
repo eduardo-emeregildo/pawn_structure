@@ -1,37 +1,37 @@
-import React from "react";
-
-const Table = ({ games }) => {
+import { toast } from "react-toastify";
+const Table = ({ games, caption, fetchGames }) => {
   return (
     <div className="overflow-x-auto max-h-64 bg-white rounded-md">
-      <table className="table bg-white">
+      <table className=" table bg-white">
+        <caption className="mt-2 text-xl font-semibold leading-none tracking-tight text-gray-900 dark:text-white">
+          {caption}
+        </caption>
         {/* head */}
         <thead>
           <tr>
-            <th>White name</th>
+            <th>White Name</th>
             <th>White Elo</th>
-            <th>Black name</th>
+            <th>Black Name</th>
             <th>Black elo</th>
             <th>Result</th>
           </tr>
         </thead>
         <tbody>
-          {/* row 1 */}
-
-          {games.length == 0 ? (
+          {games.output.length == 0 ? (
             <tr>
-              <th className="font-normal"></th>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
               <td></td>
             </tr>
           ) : (
-            games.map((game, id) => (
+            games.output.map((game, id) => (
               <tr key={id} className="hover">
-                <th className="font-normal">{game.whitename}</th>
-                <td>{game.whiteelo}</td>
+                <td>{game.whitename}</td>
+                <td>{game.whiteelo == "0" ? "??" : game.whiteelo}</td>
                 <td>{game.blackname}</td>
-                <td>{game.blackelo}</td>
+                <td>{game.blackelo == "0" ? "??" : game.blackelo}</td>
                 <td>
                   {game.result == "1" ? (
                     "1-0"
@@ -73,22 +73,38 @@ const Table = ({ games }) => {
             <td>1-0</td>
           </tr> */}
 
-          {games.length == 0 ? (
+          {games.output.length == 0 ? (
             <tr>
-              <td>
-                <button className="btn btn-disabled">Load more Games</button>
+              <td className="pr-0 pl-3">
+                <button className="btn btn-disabled text-xs">View More</button>
               </td>
             </tr>
           ) : (
             <tr>
-              <td>
+              <td className="pr-0 pl-3">
                 <button
-                  className="btn"
-                  onClick={() => {
-                    console.log("games is: ", games);
+                  className="btn text-xs"
+                  onClick={async () => {
+                    try {
+                      const res = await fetch(
+                        `api/queries/${games.tableName}/${parseInt(games.offset) + 1}`
+                      );
+                      const data = await res.json();
+                      console.log("res is: ", data);
+
+                      //A deep copy is made here because react components dont rerender if they are shallow copies, or if the new modified state is referencing
+                      const newGames = { ...games };
+                      newGames.output.push(...data.output);
+                      newGames.offset = data.offset;
+                      fetchGames(newGames);
+                      toast.success("Games loaded succesfully");
+                    } catch (error) {
+                      console.log("Error fetching data:DDD", error);
+                      toast.error("Error fetching games");
+                    }
                   }}
                 >
-                  Load more Games
+                  View More
                 </button>
               </td>
             </tr>

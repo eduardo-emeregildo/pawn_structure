@@ -5,16 +5,26 @@ import { Chessboard } from "react-chessboard";
 import { SlArrowDown } from "react-icons/sl";
 import plans from "../plans.json";
 
-// show the results of api on table, create all the other tables for common pawn structures, make get request correspond to each option , get chessboard to work, fix bug of weird animation that happens when you click on a pawn structure, try to make common ps, custom buttons align
+// get dropdown to close after clicking on view games, see if you can get the pgn to be on the move where the structure is reached, get chessboard to work, fix bug of weird animation that happens when you click on a pawn structure, try to make common ps, custom buttons align
 
 const PlayArea = () => {
-  const [games, setGames] = useState([]);
+  const [games, setGames] = useState({ output: [], offset: 0, tableName: "" });
+  console.log("GAMES IN PLAYAREA IS: ", games);
 
-  const fetchGames = (gamesArray) => {
+  const [caption, setCaption] = useState("");
+
+  const fetchCaption = (captionName) => {
     // const res = await fetch("api/queries/IQP/0");
     // const data = await res.json();
     // return data.output;
-    setGames(gamesArray);
+    setCaption(captionName);
+  };
+
+  const fetchGames = (gamesObj) => {
+    // const res = await fetch("api/queries/IQP/0");
+    // const data = await res.json();
+    // return data.output;
+    setGames(gamesObj);
   };
 
   return (
@@ -38,7 +48,12 @@ const PlayArea = () => {
           >
             {plans.map((plan) => (
               <li key={plan.id}>
-                <Modal id={plan.id} planObj={plan} fetchGames={fetchGames} />
+                <Modal
+                  id={plan.id}
+                  planObj={plan}
+                  fetchGames={fetchGames}
+                  fetchCaption={fetchCaption}
+                />
               </li>
             ))}
           </ul>
@@ -47,11 +62,11 @@ const PlayArea = () => {
         <button className="btn m-1 align-top">Custom Pawn Structure</button>
 
         {/* Move area */}
-        <div className="bg-gray-600 h-4/6 my-2 text-white rounded-sm ">
+        <div className="bg-gray-600 h-4/6 my-2 text-white rounded-sm">
           The moves go here
         </div>
 
-        <Table games={games} />
+        <Table games={games} caption={caption} fetchGames={fetchGames} />
       </div>
     </div>
   );

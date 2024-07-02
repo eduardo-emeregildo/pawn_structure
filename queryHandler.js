@@ -10,6 +10,17 @@ const options = { cwd: path.join(__dirname, "Scid vs PC-4.24", "bin") };
 
 const defaultTables = {
   IQP: true,
+  HP: true,
+  Carlsbad: true,
+  Slav: true,
+  Stonewall: true,
+  Sicilian: true,
+  SicilianD5: true,
+  Maroczy: true,
+  Benoni: true,
+  Kid: true,
+  French: true,
+  CRL: true,
 };
 
 async function query(baseName, query, filename) {
@@ -119,12 +130,81 @@ async function deleteTable(tablename) {
 
 // query('LumbrasGigaBase','-wq@0 2@-bq@0 2@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@1 8@-bp@0 8@-wb@0 2@-bb@0 2@-pattern@1 wp d ?@-pattern@0 wp c ?@-pattern@0 wp e ?','whiteiqp.csv');
 
+///////////////////////////////////////////final queries
+
 // query(
 //   "LumbrasGigaBase",
 //   "-wq@0 1@-bq@0 1@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@1 8@-bp@0 8@-wb@0 2@-bb@0 2@-range@1 25@-length@2@-pattern@1 wp d 4@-pattern@0 wp c ?@-pattern@0 wp e ?",
 //   "IQP.csv"
 // );
 
+// query(
+//   "LumbrasGigaBase",
+//   "-wq@0 1@-bq@0 1@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@2 8@-bp@0 8@-wb@0 2@-bb@0 2@-range@1 25@-length@2@-pattern@1 wp d ?@-pattern@1 wp c ?@-pattern@0 wp b ?@-pattern@0 wp e ?",
+//   "HP.csv"
+// );
+
+// query(
+//   "LumbrasGigaBase",
+//   "-wq@0 1@-bq@0 1@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@7 7@-bp@7 7@-wb@0 2@-bb@0 2@-range@1 25@-length@2@-pattern@1 wp f 2@-pattern@1 wp e 3@-pattern@1 wp d 4@-pattern@0 wp c ?@-pattern@1 bp d 5@-pattern@0 bp e ?",
+//   "Carlsbad.csv"
+// );
+
+// query(
+//   "LumbrasGigaBase",
+//   "-wq@0 1@-bq@0 1@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@7 7@-bp@7 7@-wb@0 2@-bb@0 2@-range@1 25@-length@2@-pattern@1 wp d 4@-pattern@0 wp c ?@-pattern@0 bp d ?@-pattern@1 bp c 6@-pattern@1 bp e 6",
+//   "Slav.csv"
+// );
+
+// query(
+//   "LumbrasGigaBase",
+//   "-wq@0 1@-bq@0 1@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@1 8@-bp@3 8@-wb@0 2@-bb@0 2@-range@1 25@-length@2@-pattern@1 wp d 4@-pattern@1 bp d 5@-pattern@1 bp e 6@-pattern@1 bp f 5",
+//   "Stonewall.csv"
+// );
+
+// query(
+//   "LumbrasGigaBase",
+//   "-wq@0 1@-bq@0 1@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@7 7@-bp@7 7@-wb@0 2@-bb@0 2@-range@1 25@-length@2@-pattern@1 wp e 4@-pattern@0 wp d ?@-pattern@0 bp c ?@-pattern@1 bp d 6@-pattern@1 bp e 5",
+//   "Sicilian.csv"
+// );
+
+// query(
+//   "LumbrasGigaBase",
+//   "-wq@0 1@-bq@0 1@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@7 7@-bp@7 7@-wb@0 2@-bb@0 2@-range@1 25@-length@2@-pattern@1 wp d 5@-pattern@0 wp e ?@-pattern@0 bp c ?@-pattern@1 bp d 6@-pattern@1 bp e 5",
+//   "SicilianD5.csv"
+// );
+
+// query(
+//   "LumbrasGigaBase",
+//   "-wq@0 1@-bq@0 1@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@7 7@-bp@7 7@-wb@0 2@-bb@0 2@-range@1 25@-length@2@-pattern@1 wp e 4@-pattern@1 wp c 4@-pattern@0 wp d ?@-pattern@1 bp g 6@-pattern@0 bp c ?",
+//   "Maroczy.csv"
+// );
+
+// query(
+//   "LumbrasGigaBase",
+//   "-wq@0 1@-bq@0 1@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@7 7@-bp@7 7@-wb@0 2@-bb@0 2@-range@1 25@-length@2@-pattern@1 wp e 4@-pattern@1 wp d 5@-pattern@0 wp c ?@-pattern@1 bp d 6@-pattern@1 bp c 5@-pattern@0 bp e ?",
+//   "Benoni.csv"
+// );
+
+// query(
+//   "LumbrasGigaBase",
+//   "-wq@0 1@-bq@0 1@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@8 8@-bp@8 8@-wb@0 2@-bb@0 2@-range@1 25@-length@2@-pattern@1 wp e 4@-pattern@1 wp d 5@-pattern@1 wp c 4@-pattern@1 bp d 6@-pattern@1 bp e 5@-pattern@1 bp c 7",
+//   "Kid.csv"
+// );
+
+// query(
+//   "LumbrasGigaBase",
+//   "-wq@0 1@-bq@0 1@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@2 8@-bp@3 8@-wb@0 2@-bb@0 2@-range@1 25@-length@2@-pattern@1 wp d 4@-pattern@1 wp e 5@-pattern@1 bp d 5@-pattern@1 bp e 6@-pattern@1 bp f 7",
+//   "French.csv"
+// );
+
+// query(
+//   "LumbrasGigaBase",
+//   "-wq@0 1@-bq@0 1@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@3 8@-bp@4 8@-wb@0 2@-bb@0 2@-range@1 25@-length@2@-pattern@1 wp e 4@-pattern@1 wp d 5@-pattern@1 wp c 3@-pattern@1 bp c 4@-pattern@1 bp b 5@-pattern@1 bp e 5@-pattern@1 bp d 6",
+//   "CRL.csv"
+// );
+
+////////////////////////////////////////////////////////////
 // async function test(){
 //     // let ass = await getGameInfo("whiteiqp",0);
 //     // console.log("ass is: ",ass);

@@ -26,3 +26,5 @@ CREATE TABLE whiteIQP(
 -- \COPY whiteIQP FROM 'C:\Users\emere\Desktop\pawn_structure_project\pawn_structure\Scid vs PC-4.24\bin\whiteIQP.csv' DELIMITER '@' CSV QUOTE '$' ENCODING 'LATIN1';
 
 -- SELECT pg_size_pretty( pg_total_relation_size('whiteiqp') );
+
+--SELECT COUNT(*) FROM iqp;
