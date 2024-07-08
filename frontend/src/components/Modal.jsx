@@ -81,15 +81,23 @@ const Modal = ({ planObj, fetchGames, fetchCaption }) => {
                   } catch (error) {
                     console.log("Error fetching data:DDD", error);
                     toast.error("Error fetching games");
+                  } finally {
+                    document
+                      .getElementById("mainDropdown")
+                      .toggleAttribute("open");
                   }
-                  // finally {
-                  //   setLoading(false);
-                  // }
                 }}
               >
                 View Games
               </button>
-              <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+              <button
+                className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                onClick={() => {
+                  document
+                    .getElementById("mainDropdown")
+                    .toggleAttribute("open");
+                }}
+              >
                 ✕
               </button>
             </form>

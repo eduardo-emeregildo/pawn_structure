@@ -4,6 +4,7 @@
 const { spawnSync } = require("child_process");
 const path = require("path");
 const fs = require("fs");
+const buffer = require("buffer");
 const { Client } = require("pg");
 
 const options = { cwd: path.join(__dirname, "Scid vs PC-4.24", "bin") };
@@ -69,6 +70,52 @@ async function query(baseName, query, filename) {
   return true;
 }
 
+async function newQuery(baseName, filename) {
+  console.log("Running child process..");
+  let child = spawnSync(
+    "tcscid",
+    [path.join(__dirname, "newQuery.tcl"), baseName, filename],
+    options
+  );
+
+  if (child.stdout.toString() == "0") {
+    return false;
+  }
+
+  console.log("Now making table on sql db..");
+  const result = fs.readFileSync("auth.json", "utf8");
+  const client = new Client(JSON.parse(result));
+  await client.connect();
+  await client.query(`DROP TABLE IF EXISTS ${filename.slice(0, -4)}`);
+  await client.query(`CREATE TABLE IF NOT EXISTS ${filename.slice(0, -4)}(
+        gamenumber INTEGER,
+        whitename VARCHAR(15),
+        blackname VARCHAR(15),
+        whiteelo SMALLINT,
+        blackelo SMALLINT,
+        result CHAR(1)
+    )`);
+  await client.end();
+
+  let sql = spawnSync("psql", [
+    "-U",
+    "postgres",
+    "-a",
+    "-w",
+    "-d",
+    "pawn_structure",
+    "-c",
+    `\\COPY ${filename.slice(
+      0,
+      -4
+    )} FROM 'C:\\Users\\emere\\Desktop\\pawn_structure_project\\pawn_structure\\Scid vs PC-4.24\\bin\\${filename}' DELIMITER '@' CSV QUOTE '$' ENCODING 'LATIN1';`,
+  ]);
+
+  fs.unlinkSync(path.join(__dirname, "Scid vs PC-4.24", "bin", filename));
+  console.log("Deleted csv");
+  return true;
+}
+
 function getPgn(baseName, gameNumber) {
   console.log("Running child process..");
   let child = spawnSync(
@@ -91,6 +138,26 @@ async function getGameInfo(tablename, offset) {
   // console.log("data is: ", output.rows);
   await client.end();
   return output.rows;
+}
+
+async function newGetGameInfo(baseName, startNum, endNum) {
+  // getting game info using the small database I made for the common ps and tcl script. Gets game info from startNum to endNum(these are the game numbers in the small db)
+  let child = spawnSync(
+    "tcscid",
+    [path.join(__dirname, "getGameInfo.tcl"), baseName, startNum, endNum],
+    options
+  );
+
+  const latin1Buffer = buffer.transcode(
+    Buffer.from(child.stdout.toString()),
+    "utf8",
+    "latin1"
+  );
+  let latin1String = latin1Buffer.toString("latin1");
+  // console.log(latin1String);
+  // let output = child.stdout.toString();
+  latin1String = latin1String.split("\r");
+  console.log("Output is: ", latin1String);
 }
 
 async function deleteTable(tablename) {
@@ -127,6 +194,33 @@ async function deleteTable(tablename) {
   await client.end();
   return true;
 }
+
+async function makeTables() {
+  await newQuery("IQP", "IQP.csv");
+
+  await newQuery("HP", "HP.csv");
+
+  await newQuery("Carlsbad", "Carlsbad.csv");
+
+  await newQuery("Slav", "Slav.csv");
+
+  await newQuery("Stonewall", "Stonewall.csv");
+
+  await newQuery("Sicilian", "Sicilian.csv");
+
+  await newQuery("SicilianD5", "SicilianD5.csv");
+
+  await newQuery("Maroczy", "Maroczy.csv");
+
+  await newQuery("Benoni", "Benoni.csv");
+
+  await newQuery("Kid", "Kid.csv");
+
+  await newQuery("French", "French.csv");
+
+  await newQuery("CRL", "CRL.csv");
+}
+// makeTables();
 
 // query('LumbrasGigaBase','-wq@0 2@-bq@0 2@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@1 8@-bp@0 8@-wb@0 2@-bb@0 2@-pattern@1 wp d ?@-pattern@0 wp c ?@-pattern@0 wp e ?','whiteiqp.csv');
 
@@ -205,15 +299,14 @@ async function deleteTable(tablename) {
 // );
 
 ////////////////////////////////////////////////////////////
-// async function test(){
-//     // let ass = await getGameInfo("whiteiqp",0);
-//     // console.log("ass is: ",ass);
-//     let res = await query('LumbrasGigaBase','-wq@0 2@-bq@0 2@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@1 8@-bp@0 8@-wb@0 2@-bb@0 2@-pattern@1 wp d 1','whiteiqp.csv');
-//     console.log("DONE WITH QUERY FUNCTION", res);
+// async function test() {
+//   //let ass = await newGetGameInfo("LumbrasGigaBase", "90", "105");
+//   // let res = await query('LumbrasGigaBase','-wq@0 2@-bq@0 2@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@1 8@-bp@0 8@-wb@0 2@-bb@0 2@-pattern@1 wp d 1','whiteiqp.csv');
+//   // console.log("DONE WITH QUERY FUNCTION", res);
 // }
 // test();
 
-// let ok = getPgn("LumbrasGigaBase",3);
+// let ok = getPgn("IQP", 41);
 // console.log(ok);
 
 // deleteTable("whiteiqp");

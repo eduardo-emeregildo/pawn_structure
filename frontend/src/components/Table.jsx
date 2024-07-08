@@ -1,7 +1,12 @@
 import { toast } from "react-toastify";
+import Spinner from "./Spinner";
+import { useState } from "react";
 const Table = ({ games, caption, fetchGames }) => {
+  const [loading, setLoading] = useState(false);
+
   return (
     <div className="overflow-x-auto max-h-64 bg-white rounded-md">
+      {loading ? <Spinner loading={loading} /> : null}
       <table className=" table bg-white">
         <caption className="mt-2 text-xl font-semibold leading-none tracking-tight text-gray-900 dark:text-white">
           {caption}
@@ -27,7 +32,27 @@ const Table = ({ games, caption, fetchGames }) => {
             </tr>
           ) : (
             games.output.map((game, id) => (
-              <tr key={id} className="hover">
+              <tr
+                key={id}
+                id={`t${id + 1}`}
+                className="hover cursor-pointer"
+                onClick={async (e) => {
+                  setLoading(true);
+                  try {
+                    const res = await fetch(
+                      `api/pgns/${games.tableName}/${e.currentTarget.id.slice(1)}/${games.tableName}`
+                    );
+                    const data = await res.json();
+                    console.log("pgn is:", data);
+                    // console.log(e.currentTarget.id.slice(1));
+                  } catch (error) {
+                    console.log("Error fetching data:DDD", error);
+                    toast.error("Error fetching pgn");
+                  } finally {
+                    setLoading(false);
+                  }
+                }}
+              >
                 <td>{game.whitename}</td>
                 <td>{game.whiteelo == "0" ? "??" : game.whiteelo}</td>
                 <td>{game.blackname}</td>
@@ -45,34 +70,6 @@ const Table = ({ games, caption, fetchGames }) => {
             ))
           )}
 
-          {/* <tr className="hover">
-            <th className="font-normal">Alexander Alekhine</th>
-            <td>2720</td>
-            <td>Jose Capablanca</td>
-            <td>2730</td>
-            <td>1-0</td>
-          </tr> */}
-
-          {/* row 2 */}
-
-          {/* <tr className="hover">
-            <th className="font-normal">Kasparov</th>
-            <td>2750</td>
-            <td>Karpov</td>
-            <td>2720</td>
-            <td>1-0</td>
-          </tr> */}
-
-          {/* row 3 */}
-
-          {/* <tr className="hover">
-            <th className="font-normal">Stein</th>
-            <td>2720</td>
-            <td>Korchnoi</td>
-            <td>2721</td>
-            <td>1-0</td>
-          </tr> */}
-
           {games.output.length == 0 ? (
             <tr>
               <td className="pr-0 pl-3">
@@ -83,19 +80,18 @@ const Table = ({ games, caption, fetchGames }) => {
             <tr>
               <td className="pr-0 pl-3">
                 <button
-                  className="btn text-xs"
+                  className="btn  text-xs"
                   onClick={async () => {
                     try {
                       const res = await fetch(
                         `api/queries/${games.tableName}/${parseInt(games.offset) + 1}`
                       );
                       const data = await res.json();
-                      console.log("res is: ", data);
-
-                      //A deep copy is made here because react components dont rerender if they are shallow copies, or if the new modified state is referencing
+                      //A deep copy is made here because react components dont rerender if they are shallow copies, or if the new modified state is referencing: More info here: https://www.reddit.com/r/react/comments/u5wzbu/components_not_rerendering_with_state_changes/
                       const newGames = { ...games };
                       newGames.output.push(...data.output);
                       newGames.offset = data.offset;
+                      // console.log("NEWGAMES IS: ", newGames);
                       fetchGames(newGames);
                       toast.success("Games loaded succesfully");
                     } catch (error) {

@@ -1,4 +1,3 @@
-import React from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 
 const override = {
@@ -7,12 +6,13 @@ const override = {
 };
 
 const Spinner = ({ loading }) => {
-  <ClipLoader
-    color="#4338ca"
-    loading={loading}
-    cssOverride={override}
-    size={150}
-  />;
+  return (
+    <ClipLoader
+      color="#4338ca"
+      loading={loading}
+      cssOverride={override}
+      size={150}
+    />
+  );
 };
-
 export default Spinner;

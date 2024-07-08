@@ -28,3 +28,7 @@ CREATE TABLE whiteIQP(
 -- SELECT pg_size_pretty( pg_total_relation_size('whiteiqp') );
 
 --SELECT COUNT(*) FROM iqp;
+
+-- To get results based on avg rating, do: 
+-- SELECT *,((whiteelo + blackelo) / 2) AS AVG FROM iqp ORDER BY AVG DESC LIMIT 15;
+--problem with this is that there are some online games, with online ratings

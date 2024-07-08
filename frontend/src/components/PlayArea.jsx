@@ -1,15 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Modal from "./Modal";
 import Table from "./Table";
 import { Chessboard } from "react-chessboard";
 import { SlArrowDown } from "react-icons/sl";
 import plans from "../plans.json";
 
-// get dropdown to close after clicking on view games, see if you can get the pgn to be on the move where the structure is reached, get chessboard to work, fix bug of weird animation that happens when you click on a pawn structure, try to make common ps, custom buttons align
+// mess with the positioning of the loader when clicking on a table row so that loader always shows, prevent spam clicking the table rows, see if you can get the pgn to be on the move where the structure is reached, get chessboard to work, try to make common ps, custom buttons align
 
 const PlayArea = () => {
   const [games, setGames] = useState({ output: [], offset: 0, tableName: "" });
-  console.log("GAMES IN PLAYAREA IS: ", games);
 
   const [caption, setCaption] = useState("");
 
@@ -27,6 +26,21 @@ const PlayArea = () => {
     setGames(gamesObj);
   };
 
+  let menuRef = useRef();
+
+  useEffect(() => {
+    let handler = (e) => {
+      if (!menuRef.current.contains(e.target)) {
+        document.getElementById("mainDropdown").removeAttribute("open");
+      }
+    };
+    document.addEventListener("mousedown", handler);
+
+    return () => {
+      document.removeEventListener("mousedown", handler);
+    };
+  });
+
   return (
     <div className="flex justify-evenly bg-[#101014] py-10 min-h-screen ">
       {/* Chessboard */}
@@ -37,11 +51,11 @@ const PlayArea = () => {
       {/* List of games, pawn structure dropdown/button, moves area*/}
 
       <div>
-        <div className="dropdown ">
-          <div tabIndex={0} role="button" className="btn m-1 align-bottom">
+        <details className="dropdown" id="mainDropdown" ref={menuRef}>
+          <summary tabIndex={0} role="button" className="btn m-1 align-bottom">
             <SlArrowDown />
             Common Pawn Structures
-          </div>
+          </summary>
           <ul
             tabIndex={0}
             className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box h-52 overflow-auto block"
@@ -57,7 +71,7 @@ const PlayArea = () => {
               </li>
             ))}
           </ul>
-        </div>
+        </details>
 
         <button className="btn m-1 align-top">Custom Pawn Structure</button>
 
