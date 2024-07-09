@@ -5,7 +5,7 @@ import { Chessboard } from "react-chessboard";
 import { SlArrowDown } from "react-icons/sl";
 import plans from "../plans.json";
 
-// mess with the positioning of the loader when clicking on a table row so that loader always shows, prevent spam clicking the table rows, see if you can get the pgn to be on the move where the structure is reached, get chessboard to work, try to make common ps, custom buttons align
+// get chessboard to work, see if you can get the pgn to be on the move where the structure is reached try to make common ps, custom buttons align
 
 const PlayArea = () => {
   const [games, setGames] = useState({ output: [], offset: 0, tableName: "" });

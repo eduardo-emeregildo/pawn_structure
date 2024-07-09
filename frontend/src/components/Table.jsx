@@ -6,7 +6,7 @@ const Table = ({ games, caption, fetchGames }) => {
 
   return (
     <div className="overflow-x-auto max-h-64 bg-white rounded-md">
-      {loading ? <Spinner loading={loading} /> : null}
+      {/* {loading ? <Spinner loading={loading} /> : null} */}
       <table className=" table bg-white">
         <caption className="mt-2 text-xl font-semibold leading-none tracking-tight text-gray-900 dark:text-white">
           {caption}
@@ -29,6 +29,12 @@ const Table = ({ games, caption, fetchGames }) => {
               <td></td>
               <td></td>
               <td></td>
+            </tr>
+          ) : loading ? (
+            <tr>
+              <td className="sticky left-1/2 translate-x-[-50%] ">
+                <Spinner loading={loading} />
+              </td>
             </tr>
           ) : (
             games.output.map((game, id) => (
