@@ -133,7 +133,9 @@ async function getGameInfo(tablename, offset) {
   const client = new Client(JSON.parse(result));
   await client.connect();
   let output = await client.query(
-    `SELECT * FROM ${tablename} LIMIT 15 OFFSET ${offset * 15}`
+    `SELECT * FROM ${tablename} ORDER BY gamenumber LIMIT 15 OFFSET ${
+      offset * 15
+    }`
   );
   // console.log("data is: ", output.rows);
   await client.end();

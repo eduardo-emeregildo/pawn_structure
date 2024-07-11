@@ -5,7 +5,7 @@ import { Chessboard } from "react-chessboard";
 import { SlArrowDown } from "react-icons/sl";
 import plans from "../plans.json";
 
-// get chessboard to work, see if you can get the pgn to be on the move where the structure is reached try to make common ps, custom buttons align
+// update the tables in psql to have the extra movenumber column (https://stackoverflow.com/questions/8910494/how-to-update-selected-rows-with-values-from-a-csv-file-in-postgres),get chessboard to work , try to make common ps and custom buttons align
 
 const PlayArea = () => {
   const [games, setGames] = useState({ output: [], offset: 0, tableName: "" });
