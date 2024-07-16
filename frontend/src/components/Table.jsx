@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import Spinner from "./Spinner";
 import { useState } from "react";
-const Table = ({ games, caption, fetchGames }) => {
+const Table = ({ games, caption, fetchGames, fetchFen }) => {
   const [loading, setLoading] = useState(false);
 
   return (
@@ -46,10 +46,13 @@ const Table = ({ games, caption, fetchGames }) => {
                   setLoading(true);
                   try {
                     const res = await fetch(
-                      `api/pgns/${games.tableName}/${e.currentTarget.id.slice(1)}/${games.tableName}`
+                      `api/pgns/${games.tableName}/${e.currentTarget.id.slice(1)}/${games.tableName}/${games.output[e.currentTarget.id.slice(1) - 1].movenumber}`
                     );
                     const data = await res.json();
                     console.log("pgn is:", data);
+                    //replace to remove line breaks
+                    fetchFen(data.fen.replace(/(\r\n|\n|\r)/gm, ""));
+                    //probably need to do the same to get pgn over to playArea
                     // console.log(e.currentTarget.id.slice(1));
                   } catch (error) {
                     console.log("Error fetching data:DDD", error);

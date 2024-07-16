@@ -116,11 +116,18 @@ async function newQuery(baseName, filename) {
   return true;
 }
 
-function getPgn(baseName, gameNumber) {
+function getPgn(baseName, gameNumber, moveNumber) {
+  //moveNumber is the movenumber field in the psql table corresponding to the game that is being requested
+  let side = moveNumber % 10;
+  let move = ~~(moveNumber / 10);
+  let halfMoves = move * 2;
+  halfMoves = side == 1 ? halfMoves - 2 : halfMoves - 1;
+  console.log("SIDE IS ", side, " AND MOVE IS: ", move);
+  console.log("halfMoves is: ", halfMoves);
   console.log("Running child process..");
   let child = spawnSync(
     "tcscid",
-    [path.join(__dirname, "getPgn.tcl"), baseName, gameNumber],
+    [path.join(__dirname, "getPgn.tcl"), baseName, gameNumber, halfMoves],
     options
   );
   return child.stdout.toString();
@@ -308,7 +315,7 @@ async function makeTables() {
 // }
 // test();
 
-// let ok = getPgn("IQP", 41);
+// let ok = getPgn("IQP", 1, 100);
 // console.log(ok);
 
 // deleteTable("whiteiqp");

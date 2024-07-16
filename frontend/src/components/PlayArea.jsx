@@ -4,13 +4,25 @@ import Table from "./Table";
 import { Chessboard } from "react-chessboard";
 import { SlArrowDown } from "react-icons/sl";
 import plans from "../plans.json";
+import { Chess } from "chess.js";
 
-// update the tables in psql to have the extra movenumber column (https://stackoverflow.com/questions/8910494/how-to-update-selected-rows-with-values-from-a-csv-file-in-postgres),get chessboard to work , try to make common ps and custom buttons align
+//(https://stackoverflow.com/questions/8910494/how-to-update-selected-rows-with-values-from-a-csv-file-in-postgres),get chessboard to load on filter position(Have to use tcl for this, doing a sc_game load followed by sc_move forward and then getting the fen with sc_pos fen) , try to make common ps and custom buttons align
 
 const PlayArea = () => {
   const [games, setGames] = useState({ output: [], offset: 0, tableName: "" });
 
   const [caption, setCaption] = useState("");
+
+  const [fen, setFen] = useState(
+    "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+  );
+
+  const fetchFen = (newFen) => {
+    // const res = await fetch("api/queries/IQP/0");
+    // const data = await res.json();
+    // return data.output;
+    setFen(newFen);
+  };
 
   const fetchCaption = (captionName) => {
     // const res = await fetch("api/queries/IQP/0");
@@ -45,7 +57,7 @@ const PlayArea = () => {
     <div className="flex justify-evenly bg-[#101014] py-10 min-h-screen ">
       {/* Chessboard */}
       <div>
-        <Chessboard boardWidth="650" />
+        <Chessboard boardWidth="650" position={fen} />
       </div>
 
       {/* List of games, pawn structure dropdown/button, moves area*/}
@@ -80,7 +92,12 @@ const PlayArea = () => {
           The moves go here
         </div>
 
-        <Table games={games} caption={caption} fetchGames={fetchGames} />
+        <Table
+          games={games}
+          caption={caption}
+          fetchGames={fetchGames}
+          fetchFen={fetchFen}
+        />
       </div>
     </div>
   );

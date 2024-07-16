@@ -6,6 +6,13 @@
 
 #in the output file, the movenumber and side are together without white space separator to save space in the psql table. Both will be going on one column only
 
+#The movenumber and side indicate the current position that pawn structure is reached. Since for all queries I entered the length as 2, movenumber and side represents the LAST position. To get the right fen, which would the FIRST time the match appears, you have to subtract a half move.
+
+# To calculate the fen, I will show an excample. if movenumber is 100: this means move 10 + black to move, so  the number of half-moves would 20.
+# now subtract 1 to get the first position where there was a match and we get 19.
+
+#If movenumber is 91: this means move 9 + white to move, so the number of half moves would be (18-1) = 17. Now subtract 1 to get the first position and we get 16
+
 # Example command: ./tcscid C:\Users\emere\Desktop\pawn_structure_project\pawn_structure\queryWithPosition.tcl LumbrasGigaBase '-wq@0 1@-bq@0 1@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@1 8@-bp@0 8@-wb@0 2@-bb@0 2@-range@1 25@-length@2@-pattern@1 wp d 4@-pattern@0 wp c ?@-pattern@0 wp e ?' IQP.csv
 
 
