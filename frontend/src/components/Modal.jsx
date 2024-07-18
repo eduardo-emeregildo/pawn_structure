@@ -4,7 +4,7 @@ import Spinner from "./Spinner";
 import Table from "./Table";
 import { toast } from "react-toastify";
 
-const Modal = ({ planObj, fetchGames, fetchCaption }) => {
+const Modal = ({ planObj, fetchGames, fetchCaption, fetchFen, fetchPgn }) => {
   return (
     <div>
       <button
@@ -82,6 +82,10 @@ const Modal = ({ planObj, fetchGames, fetchCaption }) => {
                     console.log("Error fetching data:DDD", error);
                     toast.error("Error fetching games");
                   } finally {
+                    fetchFen(
+                      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+                    );
+                    fetchPgn("");
                     document
                       .getElementById("mainDropdown")
                       .toggleAttribute("open");

@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import Modal from "./Modal";
 import Table from "./Table";
+import AnalysisBoard from "./AnalysisBoard";
 import { Chessboard } from "react-chessboard";
 import { SlArrowDown } from "react-icons/sl";
 import plans from "../plans.json";
 import { Chess } from "chess.js";
 
-//(https://stackoverflow.com/questions/8910494/how-to-update-selected-rows-with-values-from-a-csv-file-in-postgres),get chessboard to load on filter position(Have to use tcl for this, doing a sc_game load followed by sc_move forward and then getting the fen with sc_pos fen) , try to make common ps and custom buttons align
+// get the piece symbols on the pgn in the analysis board,implement handle right handle left functionality, fix styling, get engine analysis, try to make common ps and custom buttons align
 
 const PlayArea = () => {
   const [games, setGames] = useState({ output: [], offset: 0, tableName: "" });
@@ -17,24 +18,37 @@ const PlayArea = () => {
     "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
   );
 
+  const [pgn, setPgn] = useState("");
+
+  //code point for pieces, used in movearea
+  const pieceSymbols = {
+    BK: "\u2654",
+    BQ: "\u2655",
+    BR: "\u2656",
+    BB: "\u2657",
+    WN: "\u265E",
+    BP: "\u2659",
+    WK: "\u265A",
+    WQ: "\u265B",
+    WR: "\u265C",
+    WB: "\u265D",
+    BN: "\u2658",
+    WP: "\u265F",
+  };
+
+  const fetchPgn = (newPgn) => {
+    setPgn(newPgn);
+  };
+
   const fetchFen = (newFen) => {
-    // const res = await fetch("api/queries/IQP/0");
-    // const data = await res.json();
-    // return data.output;
     setFen(newFen);
   };
 
   const fetchCaption = (captionName) => {
-    // const res = await fetch("api/queries/IQP/0");
-    // const data = await res.json();
-    // return data.output;
     setCaption(captionName);
   };
 
   const fetchGames = (gamesObj) => {
-    // const res = await fetch("api/queries/IQP/0");
-    // const data = await res.json();
-    // return data.output;
     setGames(gamesObj);
   };
 
@@ -56,6 +70,7 @@ const PlayArea = () => {
   return (
     <div className="flex justify-evenly bg-[#101014] py-10 min-h-screen ">
       {/* Chessboard */}
+
       <div>
         <Chessboard boardWidth="650" position={fen} />
       </div>
@@ -79,6 +94,8 @@ const PlayArea = () => {
                   planObj={plan}
                   fetchGames={fetchGames}
                   fetchCaption={fetchCaption}
+                  fetchFen={fetchFen}
+                  fetchPgn={fetchPgn}
                 />
               </li>
             ))}
@@ -87,16 +104,15 @@ const PlayArea = () => {
 
         <button className="btn m-1 align-top">Custom Pawn Structure</button>
 
-        {/* Move area */}
-        <div className="bg-gray-600 h-4/6 my-2 text-white rounded-sm">
-          The moves go here
-        </div>
+        {/* Analysis board*/}
+        <AnalysisBoard pgn={pgn} />
 
         <Table
           games={games}
           caption={caption}
           fetchGames={fetchGames}
           fetchFen={fetchFen}
+          fetchPgn={fetchPgn}
         />
       </div>
     </div>

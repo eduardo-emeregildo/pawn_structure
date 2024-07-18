@@ -309,9 +309,12 @@ async function makeTables() {
 
 ////////////////////////////////////////////////////////////
 // async function test() {
-//   //let ass = await newGetGameInfo("LumbrasGigaBase", "90", "105");
+//   // let ass = await newGetGameInfo("LumbrasGigaBase", "90", "105");
 //   // let res = await query('LumbrasGigaBase','-wq@0 2@-bq@0 2@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@1 8@-bp@0 8@-wb@0 2@-bb@0 2@-pattern@1 wp d 1','whiteiqp.csv');
 //   // console.log("DONE WITH QUERY FUNCTION", res);
+
+//   let ok = await getGameInfo("IQP", 1);
+//   console.log(ok);
 // }
 // test();
 

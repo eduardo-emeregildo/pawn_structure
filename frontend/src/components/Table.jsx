@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import Spinner from "./Spinner";
 import { useState } from "react";
-const Table = ({ games, caption, fetchGames, fetchFen }) => {
+const Table = ({ games, caption, fetchGames, fetchFen, fetchPgn }) => {
   const [loading, setLoading] = useState(false);
 
   return (
@@ -52,6 +52,9 @@ const Table = ({ games, caption, fetchGames, fetchFen }) => {
                     console.log("pgn is:", data);
                     //replace to remove line breaks
                     fetchFen(data.fen.replace(/(\r\n|\n|\r)/gm, ""));
+                    // fetchPgn(data.pgn.replace(/(\r\n|\n|\r)/gm, "\n"));
+                    fetchPgn(data.pgn);
+
                     //probably need to do the same to get pgn over to playArea
                     // console.log(e.currentTarget.id.slice(1));
                   } catch (error) {
