@@ -130,7 +130,7 @@ function getPgn(baseName, gameNumber, moveNumber) {
     [path.join(__dirname, "getPgn.tcl"), baseName, gameNumber, halfMoves],
     options
   );
-  return child.stdout.toString();
+  return child.stdout.toString() + `:FEN:${halfMoves}`;
 }
 
 async function getGameInfo(tablename, offset) {

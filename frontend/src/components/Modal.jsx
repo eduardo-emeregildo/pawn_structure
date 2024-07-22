@@ -4,7 +4,14 @@ import Spinner from "./Spinner";
 import Table from "./Table";
 import { toast } from "react-toastify";
 
-const Modal = ({ planObj, fetchGames, fetchCaption, fetchFen, fetchPgn }) => {
+const Modal = ({
+  planObj,
+  fetchGames,
+  fetchCaption,
+  fetchFen,
+  fetchPgn,
+  fetchHalfMoves,
+}) => {
   return (
     <div>
       <button
@@ -86,6 +93,7 @@ const Modal = ({ planObj, fetchGames, fetchCaption, fetchFen, fetchPgn }) => {
                       "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
                     );
                     fetchPgn("");
+                    fetchHalfMoves(0);
                     document
                       .getElementById("mainDropdown")
                       .toggleAttribute("open");

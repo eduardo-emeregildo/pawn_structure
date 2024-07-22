@@ -28,9 +28,9 @@ router.get(
     const splitResult = result.split(":FEN:");
 
     res.status(200).json({
-      message: "iT WoERKS",
       pgn: splitResult[0],
       fen: splitResult[1],
+      halfMoves: splitResult[2],
     });
   }
 );
