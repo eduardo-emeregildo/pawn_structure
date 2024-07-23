@@ -7,7 +7,7 @@ import { SlArrowDown } from "react-icons/sl";
 import plans from "../plans.json";
 import { Chess } from "chess.js";
 
-// continue testing pgn viewerimplement handle left and handle right, work on analysis board(with tree data structure) get engine analysis, try to make common ps and custom buttons align
+// continue testing pgn viewer, work on analysis board(with tree data structure), highlight right half move on piece drag get engine analysis, try to make common ps and custom buttons align
 
 const PlayArea = () => {
   const [games, setGames] = useState({ output: [], offset: 0, tableName: "" });
@@ -20,9 +20,9 @@ const PlayArea = () => {
 
   const [halfMoves, setHalfMoves] = useState(0);
 
-  const [pgn, setPgn] = useState("");
   console.log("HALF MOVES IS: ", halfMoves);
 
+  const [pgn, setPgn] = useState("");
   //   const test = `[Event "European Women's Blitz Championship 2023"]
   // [Site "?"]
   // [Date "????.??.??"]
@@ -84,7 +84,7 @@ const PlayArea = () => {
       {/* Chessboard */}
 
       <div>
-        <Chessboard boardWidth="650" position={fen} />
+        <Chessboard boardWidth="650" position={fen} animationDuration={150} />
       </div>
 
       {/* List of games, pawn structure dropdown/button, moves area*/}

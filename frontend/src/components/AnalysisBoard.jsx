@@ -29,6 +29,20 @@ const AnalysisBoard = ({ pgn, fetchFen, halfMoves, fetchHalfMoves }) => {
     P: "\u265F",
   };
 
+  const handleLeft = () => {
+    if (halfMoves > 0) {
+      fetchFen(moves[halfMoves - 1].before);
+      fetchHalfMoves(halfMoves - 1);
+    }
+  };
+
+  const handleRight = () => {
+    if (halfMoves < moves.length) {
+      fetchFen(moves[halfMoves].after);
+      fetchHalfMoves(halfMoves + 1);
+    }
+  };
+
   useEffect(() => {
     if (pgn == "") {
       setMoves([]);
@@ -45,7 +59,23 @@ const AnalysisBoard = ({ pgn, fetchFen, halfMoves, fetchHalfMoves }) => {
   }, [pgn]);
 
   return (
-    <div className="bg-gray-600 h-4/6 my-2 text-gray-100 rounded-sm flex flex-col gap-2 overflow-y-scroll">
+    <div
+      className="bg-gray-600 h-4/6 my-2 text-gray-100 rounded-sm flex flex-col gap-2 overflow-y-scroll focus:outline-none"
+      tabIndex="0"
+      onKeyDown={(e) => {
+        if (e.key === "ArrowLeft") {
+          handleLeft();
+        } else if (e.key === "ArrowRight") {
+          handleRight();
+        } else if (e.key === "ArrowUp") {
+          fetchFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+          fetchHalfMoves(0);
+        } else if (e.key === "ArrowDown") {
+          fetchFen(moves[moves.length - 1].after);
+          fetchHalfMoves(moves.length);
+        }
+      }}
+    >
       {pgn == ""
         ? ""
         : moves.map((move, id) =>

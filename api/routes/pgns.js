@@ -30,7 +30,7 @@ router.get(
     res.status(200).json({
       pgn: splitResult[0],
       fen: splitResult[1],
-      halfMoves: splitResult[2],
+      halfMoves: parseInt(splitResult[2]),
     });
   }
 );
