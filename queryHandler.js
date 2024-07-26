@@ -7,7 +7,10 @@ const fs = require("fs");
 const buffer = require("buffer");
 const { Client } = require("pg");
 
-const options = { cwd: path.join(__dirname, "Scid vs PC-4.24", "bin") };
+const options = {
+  cwd: path.join(__dirname, "Scid vs PC-4.24", "bin"),
+  encoding: "latin1",
+};
 
 const defaultTables = {
   IQP: true,
@@ -139,6 +142,7 @@ async function getGameInfo(tablename, offset) {
   const result = fs.readFileSync("auth.json", "utf8");
   const client = new Client(JSON.parse(result));
   await client.connect();
+  await client.query("SET CLIENT_ENCODING=LATIN1");
   let output = await client.query(
     `SELECT * FROM ${tablename} ORDER BY gamenumber LIMIT 15 OFFSET ${
       offset * 15
@@ -309,16 +313,16 @@ async function makeTables() {
 
 ////////////////////////////////////////////////////////////
 // async function test() {
-//   // let ass = await newGetGameInfo("LumbrasGigaBase", "90", "105");
-//   // let res = await query('LumbrasGigaBase','-wq@0 2@-bq@0 2@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@1 8@-bp@0 8@-wb@0 2@-bb@0 2@-pattern@1 wp d 1','whiteiqp.csv');
-//   // console.log("DONE WITH QUERY FUNCTION", res);
+//   //   // let ass = await newGetGameInfo("LumbrasGigaBase", "90", "105");
+//   //   // let res = await query('LumbrasGigaBase','-wq@0 2@-bq@0 2@-wr@0 2@-br@0 2@-wn@0 2@-bn@0 2@-wm@0 4@-bm@0 4@-wp@1 8@-bp@0 8@-wb@0 2@-bb@0 2@-pattern@1 wp d 1','whiteiqp.csv');
+//   //   // console.log("DONE WITH QUERY FUNCTION", res);
 
-//   let ok = await getGameInfo("IQP", 1);
+//   let ok = await getGameInfo("Slav", 0);
 //   console.log(ok);
 // }
 // test();
 
-// let ok = getPgn("IQP", 1, 100);
+// let ok = getPgn("Slav", 3, 170);
 // console.log(ok);
 
 // deleteTable("whiteiqp");

@@ -11,6 +11,7 @@ const AnalysisBoard = ({ pgn, fetchFen, halfMoves, fetchHalfMoves }) => {
   //this approach can prove useful to keep track of the game(movenumber, previous position, next position etc)
 
   //code point for pieces, used in movearea
+  console.log("HEADER IS: ", header);
 
   const blackPieceSymbols = {
     K: "\u2654",
@@ -42,7 +43,8 @@ const AnalysisBoard = ({ pgn, fetchFen, halfMoves, fetchHalfMoves }) => {
       fetchHalfMoves(halfMoves + 1);
     }
   };
-
+  const test = header.White;
+  // const decodeName = (name) => {};
   useEffect(() => {
     if (pgn == "") {
       setMoves([]);
@@ -60,7 +62,7 @@ const AnalysisBoard = ({ pgn, fetchFen, halfMoves, fetchHalfMoves }) => {
 
   return (
     <div
-      className="bg-gray-600 h-4/6 my-2 text-gray-100 rounded-sm flex flex-col gap-2 overflow-y-scroll focus:outline-none"
+      className="bg-gray-600 h-[40rem] max-h-[40rem] my-2 text-gray-100 rounded-sm flex flex-col gap-2 overflow-y-scroll focus:outline-none"
       tabIndex="0"
       onKeyDown={(e) => {
         if (e.key === "ArrowLeft") {
@@ -76,6 +78,11 @@ const AnalysisBoard = ({ pgn, fetchFen, halfMoves, fetchHalfMoves }) => {
         }
       }}
     >
+      <div className="text-center font-bold">
+        {Object.keys(header).length === 0
+          ? ""
+          : `${header.White} - ${header.Black} (${header.Result})`}
+      </div>
       {pgn == ""
         ? ""
         : moves.map((move, id) =>
@@ -137,6 +144,8 @@ const AnalysisBoard = ({ pgn, fetchFen, halfMoves, fetchHalfMoves }) => {
       <div>{`${pieceSymbols.WB}b5`}</div>
       <div>a6</div>
     </div> */}
+
+      <div className="text-sm">{header.Result}</div>
     </div>
   );
 };

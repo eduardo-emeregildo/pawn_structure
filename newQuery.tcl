@@ -10,6 +10,9 @@
 # set file_exists [file exists "quer.bat"]
 # puts "$file_exists"
 
+
+#this makes the the game list csv using the small scid databases
+
 if {[file exists [lindex $argv 1]] == 0} {
     sc_base open [lindex $argv 0]
     set filter_num [sc_filter count]

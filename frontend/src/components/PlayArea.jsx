@@ -4,24 +4,23 @@ import Table from "./Table";
 import AnalysisBoard from "./AnalysisBoard";
 import { Chessboard } from "react-chessboard";
 import { SlArrowDown } from "react-icons/sl";
+import { GiCycle } from "react-icons/gi";
 import plans from "../plans.json";
 import { Chess } from "chess.js";
 
-// continue testing pgn viewer, work on analysis board(with tree data structure), highlight right half move on piece drag get engine analysis, try to make common ps and custom buttons align
+// make database have LATIN1 encoding, then add the data again. Try changing template1 and then creating the pawn_structure db :(  ), work on analysis board(with tree data structure), highlight right half move on piece drag get engine analysis, make the analysis board scroll down on arrow key press, try to make common ps and custom buttons align
 
 const PlayArea = () => {
   const [games, setGames] = useState({ output: [], offset: 0, tableName: "" });
 
   const [caption, setCaption] = useState("");
+  const [boardOrientation, setBoardOrientation] = useState("white");
 
   const [fen, setFen] = useState(
     "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
   );
 
   const [halfMoves, setHalfMoves] = useState(0);
-
-  console.log("HALF MOVES IS: ", halfMoves);
-
   const [pgn, setPgn] = useState("");
   //   const test = `[Event "European Women's Blitz Championship 2023"]
   // [Site "?"]
@@ -82,9 +81,23 @@ const PlayArea = () => {
   return (
     <div className="flex justify-evenly bg-[#101014] py-10 min-h-screen ">
       {/* Chessboard */}
-
       <div>
-        <Chessboard boardWidth="650" position={fen} animationDuration={150} />
+        <Chessboard
+          boardWidth="650"
+          position={fen}
+          animationDuration={150}
+          boardOrientation={boardOrientation}
+        />
+        <button
+          className="btn btn-xs mt-3"
+          onClick={() => {
+            boardOrientation == "white"
+              ? setBoardOrientation("black")
+              : setBoardOrientation("white");
+          }}
+        >
+          <GiCycle />
+        </button>
       </div>
 
       {/* List of games, pawn structure dropdown/button, moves area*/}
