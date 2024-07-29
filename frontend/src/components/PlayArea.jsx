@@ -8,7 +8,7 @@ import { GiCycle } from "react-icons/gi";
 import plans from "../plans.json";
 import { Chess } from "chess.js";
 
-// make database have LATIN1 encoding, then add the data again. Try changing template1 and then creating the pawn_structure db :(  ), work on analysis board(with tree data structure), highlight right half move on piece drag get engine analysis, make the analysis board scroll down on arrow key press, try to make common ps and custom buttons align
+//  correctly implement handleLeft and handleRight with the tree structure, implement adding a move, highlight right half move on piece drag, get engine analysis, make the analysis board scroll down on arrow key press, try to make common ps and custom buttons align
 
 const PlayArea = () => {
   const [games, setGames] = useState({ output: [], offset: 0, tableName: "" });

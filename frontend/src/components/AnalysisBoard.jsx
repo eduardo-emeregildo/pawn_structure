@@ -9,10 +9,8 @@ const AnalysisBoard = ({ pgn, fetchFen, halfMoves, fetchHalfMoves }) => {
   // const [game,setGame] = useState(new Chess());
 
   //this approach can prove useful to keep track of the game(movenumber, previous position, next position etc)
-
-  //code point for pieces, used in movearea
-  console.log("HEADER IS: ", header);
-
+  console.log("MOVES IS: ", moves);
+  //code point for pieces
   const blackPieceSymbols = {
     K: "\u2654",
     Q: "\u2655",
@@ -81,7 +79,7 @@ const AnalysisBoard = ({ pgn, fetchFen, halfMoves, fetchHalfMoves }) => {
       <div className="text-center font-bold">
         {Object.keys(header).length === 0
           ? ""
-          : `${header.White} - ${header.Black} (${header.Result})`}
+          : `${header.White} - ${header.Black} (${header.Result == "1/2-1/2" ? "\u00BD - \u00BD" : header.Result})`}
       </div>
       {pgn == ""
         ? ""
