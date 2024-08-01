@@ -7,7 +7,7 @@ import { SlArrowDown } from "react-icons/sl";
 import { GiCycle } from "react-icons/gi";
 import plans from "../plans.json";
 import { Chess } from "chess.js";
-//  start adding the tree data structure to the project, implement adding a move, highlight right half move on piece drag, get engine analysis, make the analysis board scroll down on arrow key press, try to make common ps and custom buttons align
+//  figure out how to iterate tree ds in jsx to display the moves. If anything make a function to turn it into an array or change the tree implementation, implement adding a move, highlight right half move on piece drag, get engine analysis, make the analysis board scroll down on arrow key press, try to make common ps and custom buttons align
 
 const PlayArea = () => {
   const [games, setGames] = useState({ output: [], offset: 0, tableName: "" });

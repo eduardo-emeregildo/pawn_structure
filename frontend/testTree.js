@@ -35,6 +35,32 @@ function printGameFromTree(tree, history) {
   }
 }
 
+const treeRenderHybrid = (treeNode) => {
+  let res = [];
+  treeNode.children.forEach((mainChild) => {
+    console.log(mainChild.halfMoveObj.san);
+    res.push(mainChild.halfMoveObj.san);
+
+    if (mainChild.nodeId[0] != 1) {
+      //recursive call
+      res = res.concat(treeRenderHybrid(mainChild));
+    }
+    // treeRenderHybrid(mainChild.children[0]);
+  });
+  if (treeNode.children.length > 0) {
+    res = res.concat(treeRenderHybrid(treeNode.children[0]));
+  }
+
+  return res;
+};
+
+const treeRenderDfs = (treeNode) => {
+  treeNode.children.map((mainChild) => {
+    console.log(mainChild.halfMoveObj.san);
+    treeRenderDfs(mainChild);
+  });
+};
+
 let x = new Chess();
 x.loadPgn(sample);
 // console.log(x.history({ verbose: true }));
@@ -46,6 +72,8 @@ console.log(tree.root);
 
 printGameFromTree(tree, halfMoves);
 
+console.log(tree.treeRender(tree.root));
+
 // how to arbitrarily make new moves?
 // Initialize a chess.js object with fen, then make the move you want to make(To get which piece,square use the props on react-chessboard, onPieceDrop etc.(After piece has been dropped, have to change the position prop to render new position) Also move validation will be taken care of by chess.js)
 
@@ -56,44 +84,105 @@ let newMove = newPos.move("e5");
 console.log(
   "The first node (That's not a parent has): ",
   newVariation.children.length,
-  "Children"
+  "Children. the san of this move is: ",
+  newVariation.halfMoveObj.san
 );
+
 console.log("Now adding one a node...");
-newVariation.add([2, 1], newMove, newVariation);
+tree.addNode(newVariation, newMove);
+
 console.log(
   "Should have 2 children.. ",
   newVariation.children.length,
   "Children"
 );
-// console.log(newVariation.children[1].halfMoveObj.san);
-console.log("\nThe first three half moves of the game are: ");
+console.log(
+  "the node's second child should be e5: ",
+  newVariation.children[1].halfMoveObj.san
+);
+
+console.log("The trees numVariations should be 2 now: ", tree.numVariations);
+console.log("Adding a third child to first move:");
+newPos = new Chess(newVariation.halfMoveObj.after);
+newMove = newPos.move("Nf6");
+
+tree.addNode(newVariation, newMove);
+
+console.log(
+  "Should have 3 children.. ",
+  newVariation.children.length,
+  "Children"
+);
+
+console.log(
+  "the node's third child should be Nf6: ",
+  newVariation.children[2].halfMoveObj.san,
+  " with nodeId [3,1]: ",
+  newVariation.children[2].nodeId
+);
+
+console.log("The trees numVariations should be 3 now: ", tree.numVariations);
+
+console.log(
+  "Now branching adding a move after e5(adding a child newVariation.children[1])"
+);
+
+newPos = new Chess(newVariation.children[1].halfMoveObj.after);
+newMove = newPos.move("Nf3");
+tree.addNode(newVariation.children[1], newMove);
+
+console.log(
+  "e5 should have 1 child: ",
+  newVariation.children[1].children.length,
+  "With nodeId [2,2]: ",
+  newVariation.children[1].children[0].nodeId
+);
+
+console.log("Now adding two child nodes to Nf6 node: ");
+
+console.log(
+  newVariation.children[2].halfMoveObj.san,
+  "children: ",
+  newVariation.children[2].children.length
+);
+
+newPos = new Chess(newVariation.children[2].halfMoveObj.after);
+newMove = newPos.move("c4");
+tree.addNode(newVariation.children[2], newMove);
+
+newPos = new Chess(newVariation.children[2].halfMoveObj.after);
+newMove = newPos.move("Nf3");
+tree.addNode(newVariation.children[2], newMove);
+
+console.log(
+  "Nf6 should now have 2 children: ",
+  newVariation.children[2].children.length
+);
+console.log(
+  "first child should have nodeId [3,2]: ",
+  newVariation.children[2].children[0].nodeId
+);
+
+console.log(
+  "Second child should have nodeId [4,1]: ",
+  newVariation.children[2].children[1].nodeId
+);
+
+console.log("\nThe first three half moves of the game(mainline) are: ");
 console.log(newVariation.halfMoveObj.san);
 let temp = tree.handleRight(newVariation);
 console.log(temp.halfMoveObj.san);
 temp = tree.handleRight(temp);
 console.log(temp.halfMoveObj.san);
-console.log(
-  "Now setting the current node to the second child of the first non-root node"
-);
-temp = newVariation.children[1];
-console.log("The san of the current node is: ", temp.halfMoveObj.san);
 
-console.log(
-  "After calling handleRight, result should be null because it is the end of line. Result is -> ",
-  tree.handleRight(temp)
-);
-temp = tree.handleLeft(temp);
-console.log(
-  "After calling handleLeft, the resulting node's san should be d4. Result is -> ",
-  temp.halfMoveObj.san
-);
+console.log("Now calling tree render...");
+let gameArr = tree.treeRender(tree.root);
 
-console.log(
-  "Now we are back in the main line. The next 3 halfmove sans should be: d5 c4 dxc4"
-);
-temp = tree.handleRight(temp);
-console.log(temp.halfMoveObj.san);
-temp = tree.handleRight(temp);
-console.log(temp.halfMoveObj.san);
-temp = tree.handleRight(temp);
-console.log(temp.halfMoveObj.san);
+gameArr.forEach((game) => {
+  console.log(game.halfMoveObj.san);
+});
+
+// let newVariation = tree.root.children[0];
+
+// analyze/ fix bfs, might be wrong. its going to be a variaton of bfs.
+// Any non zero child(so sideline) will be printed in its entirety, then you continue the printing the mainline
