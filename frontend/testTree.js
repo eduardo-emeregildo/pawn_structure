@@ -70,9 +70,9 @@ const halfMoves = x.history({ verbose: true });
 tree.init(halfMoves);
 console.log(tree.root);
 
-printGameFromTree(tree, halfMoves);
-
-console.log(tree.treeRender(tree.root));
+// printGameFromTree(tree, halfMoves);
+console.log("FIRST TREE RENDER:");
+// console.log(tree.treeRender(tree.root));
 
 // how to arbitrarily make new moves?
 // Initialize a chess.js object with fen, then make the move you want to make(To get which piece,square use the props on react-chessboard, onPieceDrop etc.(After piece has been dropped, have to change the position prop to render new position) Also move validation will be taken care of by chess.js)
@@ -175,14 +175,33 @@ console.log(temp.halfMoveObj.san);
 temp = tree.handleRight(temp);
 console.log(temp.halfMoveObj.san);
 
-console.log("Now calling tree render...");
+// console.log("Now calling tree render a second time...");
+
 let gameArr = tree.treeRender(tree.root);
 
-gameArr.forEach((game) => {
-  console.log(game.halfMoveObj.san);
-});
+// console.log(gameArr);
 
-// let newVariation = tree.root.children[0];
+// console.log("Adding another child in the innermost Nf3 move...");
 
-// analyze/ fix bfs, might be wrong. its going to be a variaton of bfs.
-// Any non zero child(so sideline) will be printed in its entirety, then you continue the printing the mainline
+newPos = new Chess(newVariation.children[2].children[1].halfMoveObj.after);
+newMove = newPos.move("g6");
+tree.addNode(newVariation.children[2].children[1], newMove);
+
+// console.log(tree.treeRender(tree.root));
+
+// console.log("Adding a child to the root(i.e. different first move):");
+
+newPos = new Chess();
+newMove = newPos.move("e4");
+tree.addNode(tree.root, newMove);
+
+// tree.addNode(newVariation.children[2].children[1], newMove);
+
+let renderArr = tree.treeRender(tree.root);
+// console.log(renderArr);
+// console.log(tree.getPieceSymbol(0, "Qxd7+"));
+
+// console.log(tree.root.children[0].halfMove);
+// console.log(tree.root.children[1].halfMove);
+
+export { tree };

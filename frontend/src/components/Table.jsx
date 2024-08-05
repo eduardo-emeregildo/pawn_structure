@@ -12,7 +12,7 @@ const Table = ({
   const [loading, setLoading] = useState(false);
 
   return (
-    <div className="overflow-x-auto max-h-64 bg-white rounded-md">
+    <div className="overflow-x-auto w-[33rem] max-h-64 bg-white rounded-md">
       {/* {loading ? <Spinner loading={loading} /> : null} */}
       <table className=" table bg-white">
         <caption className="mt-2 text-xl font-semibold leading-none tracking-tight text-gray-900 dark:text-white">

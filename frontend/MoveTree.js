@@ -1,24 +1,51 @@
-import { Chess } from "chess.js";
+const blackPieceSymbols = {
+  K: "\u2654",
+  Q: "\u2655",
+  R: "\u2656",
+  B: "\u2657",
+  P: "\u2659",
+  N: "\u2658",
+};
+const whitePieceSymbols = {
+  N: "\u265E",
+  K: "\u265A",
+  Q: "\u265B",
+  R: "\u265C",
+  B: "\u265D",
+  P: "\u265F",
+};
+
 class ChessNode {
   // nodeId is two elt array, halfMove is the position object returned from chess.js. If halfMove is null, then this is the root node, which represents the starting position. parent is the parentNode, the root node will have a null parent, indicating no parent
-  constructor(nodeId, halfMoveObj, parent) {
+  constructor(nodeId, halfMoveObj, parent, halfMove = 0) {
     this.nodeId = nodeId;
     this.halfMoveObj = halfMoveObj;
     this.children = [];
     this.parent = parent;
+    this.halfMove = halfMove;
   }
 
   //adds child to current node. variationCount is current tree.numVariations that will get passed in. will return new variationCount
   add(variationCount, halfMoveObj) {
     if (this.children.length == 0) {
       this.children.push(
-        new ChessNode([this.nodeId[0], this.nodeId[1] + 1], halfMoveObj, this)
+        new ChessNode(
+          [this.nodeId[0], this.nodeId[1] + 1],
+          halfMoveObj,
+          this,
+          this.halfMove + 1
+        )
       );
 
       return variationCount;
     } else {
       this.children.push(
-        new ChessNode([variationCount + 1, 1], halfMoveObj, this)
+        new ChessNode(
+          [variationCount + 1, 1],
+          halfMoveObj,
+          this,
+          this.halfMove + 1
+        )
       );
 
       return variationCount + 1;
@@ -85,15 +112,49 @@ class Tree {
     this.numVariations = varCount;
   }
 
-  // returns an array with right ordering(similar ordering to chess.com) for rendering in react. Give it the root node and will include all lines
+  //given halfMovenum will return move number(i.e. 1. or 1...) halfMove=1 is first halfMove
+  getMoveNum(halfMove) {
+    if (halfMove % 2 == 0) {
+      return `${halfMove / 2}...`;
+    } else return `${(halfMove + 1) / 2}.`;
+  }
+
+  // returns the correct move notation(with piece symbols given the halfmove and san)
+  getPieceSymbol(halfMove, san) {
+    if (san[0] == san[0].toUpperCase() && san[0] != "O") {
+      return `${halfMove % 2 == 1 ? whitePieceSymbols[san[0]] : blackPieceSymbols[san[0]]}${san.slice(1)} `;
+    } else {
+      //a pawn move
+      return san + " ";
+    }
+  }
+  //returns renderArray, which is an array of nodes, with sideLines being represented as nested arrays. Give it the root node to return the whole game in array form
   treeRender(treeNode) {
     let res = [];
     treeNode.children.forEach((mainChild) => {
-      res.push(mainChild);
-
-      if (mainChild.nodeId[0] != 1) {
+      // if you are the main line, i.e. a childs nodeId = [parent.nodeid[0], parent.nodeid[1] + 1]
+      if (
+        JSON.stringify(mainChild.parent.nodeId) ==
+        JSON.stringify([mainChild.nodeId[0], mainChild.nodeId[1] - 1])
+      ) {
+        res.push(
+          // this.getMoveNum(mainChild.halfMove) +
+          //   this.getPieceSymbol(mainChild.halfMove, mainChild.halfMoveObj.san)
+          mainChild
+        );
+      } else {
         //recursive call
-        res = res.concat(this.treeRender(mainChild));
+        // res = res.concat(this.treeRender(mainChild));
+
+        //below is to switch from using parenthesis to nested arrays
+        let tmp = [
+          // this.getMoveNum(mainChild.halfMove) + mainChild.halfMoveObj.san,
+          mainChild,
+        ];
+        res.push(tmp.concat(this.treeRender(mainChild)));
+
+        // let tmp = `(${this.getMoveNum(halfMove) + this.getPieceSymbol(halfMove, mainChild.halfMoveObj.san)} `;
+        // res.push(tmp + this.treeRender(mainChild, halfMove + 1) + ")");
       }
     });
     if (treeNode.children.length > 0) {
@@ -102,6 +163,29 @@ class Tree {
 
     return res;
   }
+
+  // treeRender(treeNode) {
+  //   let res = [];
+  //   treeNode.children.forEach((mainChild) => {
+  //     // if you are the main line, i.e. a childs nodeId = [parent.nodeid[0], parent.nodeid[1] + 1]
+  //     if (
+  //       JSON.stringify(mainChild.parent.nodeId) ==
+  //       JSON.stringify([mainChild.nodeId[0], mainChild.nodeId[1] - 1])
+  //     ) {
+  //       res.push(mainChild.halfMoveObj.san);
+  //     } else {
+  //       //recursive call
+  //       // res = res.concat(this.treeRender(mainChild));
+  //       let tmp = [mainChild.halfMoveObj.san];
+  //       res.push(tmp.concat(this.treeRender(mainChild)));
+  //     }
+  //   });
+  //   if (treeNode.children.length > 0) {
+  //     res = res.concat(this.treeRender(treeNode.children[0]));
+  //   }
+
+  //   return res;
+  // }
 }
 
 export { Tree };
