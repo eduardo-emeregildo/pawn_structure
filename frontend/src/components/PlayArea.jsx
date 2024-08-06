@@ -7,7 +7,7 @@ import { SlArrowDown } from "react-icons/sl";
 import { GiCycle } from "react-icons/gi";
 import plans from "../plans.json";
 
-//add handleLeft and handleRight, implement adding a move, highlight right half move on piece drag, get engine analysis, make the analysis board scroll down on arrow key press, try to make common ps and custom buttons align
+//implement adding a move, highlight right half move on piece drag, get engine analysis, make the analysis board scroll down on arrow key press, try to make common ps and custom buttons align
 
 const PlayArea = () => {
   const [games, setGames] = useState({ output: [], offset: 0, tableName: "" });

@@ -21,35 +21,29 @@ const AnalysisBoard = ({ pgn, fetchFen, halfMoves, fetchHalfMoves }) => {
   //this approach can prove useful to keep track of the game(movenumber, previous position, next position etc)
 
   // let testTree = tree.treeRender(tree.root);
-  //code point for pieces
-  const blackPieceSymbols = {
-    K: "\u2654",
-    Q: "\u2655",
-    R: "\u2656",
-    B: "\u2657",
-    P: "\u2659",
-    N: "\u2658",
-  };
-  const whitePieceSymbols = {
-    N: "\u265E",
-    K: "\u265A",
-    Q: "\u265B",
-    R: "\u265C",
-    B: "\u265D",
-    P: "\u265F",
-  };
 
   const handleLeft = () => {
-    if (halfMoves > 0) {
-      fetchFen(moves[halfMoves - 1].before);
-      fetchHalfMoves(halfMoves - 1);
+    let res = moves.handleLeft(currentChessNode);
+    if (res != null) {
+      if (res.parent == null) {
+        //show starting position
+        fetchFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        setCurrentChessNode(moves.root);
+        fetchHalfMoves([1, 0]);
+      } else {
+        fetchFen(res.halfMoveObj.after);
+        setCurrentChessNode(res);
+        fetchHalfMoves(res.nodeId);
+      }
     }
   };
 
   const handleRight = () => {
-    if (halfMoves < moves.length) {
-      fetchFen(moves[halfMoves].after);
-      fetchHalfMoves(halfMoves + 1);
+    let res = moves.handleRight(currentChessNode);
+    if (res != null) {
+      fetchFen(res.halfMoveObj.after);
+      setCurrentChessNode(res);
+      fetchHalfMoves(res.nodeId);
     }
   };
 
@@ -222,7 +216,9 @@ const AnalysisBoard = ({ pgn, fetchFen, halfMoves, fetchHalfMoves }) => {
           let counter = 0;
           let j = i + 1;
           while (Array.isArray(renderArr[j])) {
-            res.push(<div>{displaySideLine(renderArr[j])}</div>);
+            res.push(
+              <div className="pl-2">{displaySideLine(renderArr[j])}</div>
+            );
             counter += 1;
             j += 1;
           }
@@ -241,21 +237,18 @@ const AnalysisBoard = ({ pgn, fetchFen, halfMoves, fetchHalfMoves }) => {
   return (
     <div
       className="bg-gray-600 h-[40rem] w-[33rem] rounded-md max-h-[40rem] my-2 text-gray-100  flex flex-col gap-2 overflow-scroll focus:outline-none"
-
-      // tabIndex="0"
-      // onKeyDown={(e) => {
-      //   if (e.key === "ArrowLeft") {
-      //     handleLeft();
-      //   } else if (e.key === "ArrowRight") {
-      //     handleRight();
-      //   } else if (e.key === "ArrowUp") {
-      //     fetchFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-      //     fetchHalfMoves(0);
-      //   } else if (e.key === "ArrowDown") {
-      //     fetchFen(moves[moves.length - 1].after);
-      //     fetchHalfMoves(moves.length);
-      //   }
-      // }}
+      tabIndex="0"
+      onKeyDown={(e) => {
+        if (e.key === "ArrowLeft") {
+          handleLeft();
+        } else if (e.key === "ArrowRight") {
+          handleRight();
+        } else if (e.key === "ArrowUp") {
+          fetchFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+          setCurrentChessNode(moves.root);
+          fetchHalfMoves([1, 0]);
+        }
+      }}
     >
       <div className="text-center font-bold">
         {Object.keys(header).length === 0
