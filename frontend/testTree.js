@@ -204,4 +204,6 @@ let renderArr = tree.treeRender(tree.root);
 // console.log(tree.root.children[0].halfMove);
 // console.log(tree.root.children[1].halfMove);
 
+// console.log("TESTING FINDNODEINMAINLINE ", tree.findNodeInMainline([1, 19]));
+
 export { tree };

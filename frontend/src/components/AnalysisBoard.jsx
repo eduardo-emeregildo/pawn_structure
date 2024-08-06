@@ -9,13 +9,18 @@ const AnalysisBoard = ({ pgn, fetchFen, halfMoves, fetchHalfMoves }) => {
   const [moves, setMoves] = useState(new Tree()); // this will probably be where the tree is defined
   const [header, setHeader] = useState({});
 
+  //stores a reference to current chess node. This will be useful for handleLeft/Right and adding a move since all of these are dependent on the current node. The on click functionality is handled differently since it doesnt depend on current node. initialize to root
+  const [currentChessNode, setCurrentChessNode] = useState(moves.root);
+  console.log(
+    `Current Chess Node is: ${currentChessNode.parent == null ? "Parent" : currentChessNode.halfMoveObj.san}`
+  );
+
   // Another posibility is to make a game state variable and set it to a chess.js object:
   // const [game,setGame] = useState(new Chess());
 
   //this approach can prove useful to keep track of the game(movenumber, previous position, next position etc)
 
-  console.log("MOVES IS: ", moves);
-  let testTree = tree.treeRender(tree.root);
+  // let testTree = tree.treeRender(tree.root);
   //code point for pieces
   const blackPieceSymbols = {
     K: "\u2654",
@@ -47,20 +52,34 @@ const AnalysisBoard = ({ pgn, fetchFen, halfMoves, fetchHalfMoves }) => {
       fetchHalfMoves(halfMoves + 1);
     }
   };
-  const test = header.White;
+
+  const handleClick = (e, renderArr) => {
+    let currNodeId = e.currentTarget.id.split(",");
+    fetchHalfMoves([parseInt(currNodeId[0]), parseInt(currNodeId[1])]);
+    fetchFen(
+      renderArr[parseInt(e.currentTarget.getAttribute("i"))].halfMoveObj.after
+    );
+    setCurrentChessNode(renderArr[parseInt(e.currentTarget.getAttribute("i"))]);
+  };
+
   // const decodeName = (name) => {};
   useEffect(() => {
-    setMoves(moves.reset());
+    // setMoves(moves.reset());
     if (pgn == "") {
       setHeader({});
+      setMoves(moves.reset());
+      setCurrentChessNode(moves.root);
     } else {
       const game = new Chess();
       game.loadPgn(pgn);
       console.log("GAME IS: ", game);
-      // let tmp = new Tree();
-      // tmp.init(game.history({ verbose: true }));
-      setMoves(moves.init(game.history({ verbose: true })));
+      let tmp = new Tree();
+      tmp.init(game.history({ verbose: true }));
+      setMoves(tmp);
       setHeader(game.header());
+      // let renderArr = tmp.treeRender(tmp.root);
+      // setCurrentChessNode(renderArr[halfMoves[1] - 1]);
+      setCurrentChessNode(tmp.findNodeInMainline(halfMoves));
     }
 
     // return () => {};
@@ -79,9 +98,13 @@ const AnalysisBoard = ({ pgn, fetchFen, halfMoves, fetchHalfMoves }) => {
 
           return (
             <span
-              className="hover:bg-sky-700 hover: cursor-pointer"
-              key={id}
+              className={`hover:bg-sky-700 hover:cursor-pointer w-fit ${JSON.stringify(halfMoves) == JSON.stringify(move.nodeId) ? "bg-sky-700" : ""}`}
+              key={move.nodeId}
               id={move.nodeId}
+              i={id}
+              onClick={(e) => {
+                handleClick(e, arr);
+              }}
             >
               {(move.halfMove % 2 == 0 && id != 0
                 ? ""
@@ -102,15 +125,24 @@ const AnalysisBoard = ({ pgn, fetchFen, halfMoves, fetchHalfMoves }) => {
   function renderToJsx(renderArr) {
     let res = [];
     let i = 0;
+    // let newCurrentNodeIndex = null;
     while (i < renderArr.length) {
       //if current move is a mainline move, search to the right for all the side lines deviating from this move
       if (!Array.isArray(renderArr[i])) {
+        // if (JSON.stringify(halfMoves) == JSON.stringify(renderArr[i].nodeId)) {
+        //   newCurrentNodeIndex = i;
+        // }
         //if its the last main line move
         if (i + 1 >= renderArr.length) {
           res.push(
             <div
-              className="hover:bg-sky-700 hover:cursor-pointer w-fit"
+              className={`hover:bg-sky-700 hover:cursor-pointer w-fit ${JSON.stringify(halfMoves) == JSON.stringify(renderArr[i].nodeId) ? "bg-sky-700" : ""}`}
               id={renderArr[i].nodeId}
+              key={i}
+              i={i}
+              onClick={(e) => {
+                handleClick(e, renderArr);
+              }}
             >
               {moves.getMoveNum(renderArr[i].halfMove) +
                 moves.getPieceSymbol(
@@ -123,11 +155,20 @@ const AnalysisBoard = ({ pgn, fetchFen, halfMoves, fetchHalfMoves }) => {
         }
         //current half move has no sidelines. Display both half moves on same line with 2 cols
         else if (!Array.isArray(renderArr[i + 1])) {
+          // if (
+          //   JSON.stringify(halfMoves) == JSON.stringify(renderArr[i + 1].nodeId)
+          // ) {
+          //   newCurrentNodeIndex = i + 1;
+          // }
           res.push(
-            <div className="flex gap-7">
+            <div className="flex gap-7" key={i}>
               <div
-                className="hover:bg-sky-700 hover: cursor-pointer"
+                className={`hover:bg-sky-700 hover:cursor-pointer w-fit ${JSON.stringify(halfMoves) == JSON.stringify(renderArr[i].nodeId) ? "bg-sky-700" : ""}`}
                 id={renderArr[i].nodeId}
+                i={i}
+                onClick={(e) => {
+                  handleClick(e, renderArr);
+                }}
               >
                 {moves.getMoveNum(renderArr[i].halfMove) +
                   moves.getPieceSymbol(
@@ -137,8 +178,13 @@ const AnalysisBoard = ({ pgn, fetchFen, halfMoves, fetchHalfMoves }) => {
               </div>
 
               <div
-                className="hover:bg-sky-700 hover: cursor-pointer"
+                className={`hover:bg-sky-700 hover:cursor-pointer w-fit ${JSON.stringify(halfMoves) == JSON.stringify(renderArr[i + 1].nodeId) ? "bg-sky-700" : ""}`}
                 id={renderArr[i + 1].nodeId}
+                i={i + 1}
+                onClick={(e) => {
+                  handleClick(e, renderArr);
+                }}
+                key={renderArr[i + 1].nodeId}
               >
                 {(renderArr[i + 1].halfMove % 2 == 0
                   ? ""
@@ -157,8 +203,13 @@ const AnalysisBoard = ({ pgn, fetchFen, halfMoves, fetchHalfMoves }) => {
           //first push the main move
           res.push(
             <div
-              className="hover:bg-sky-700 hover: cursor-pointer w-fit"
+              className={`hover:bg-sky-700 hover:cursor-pointer w-fit ${JSON.stringify(halfMoves) == JSON.stringify(renderArr[i].nodeId) ? "bg-sky-700" : ""}`}
               id={renderArr[i].nodeId}
+              i={i}
+              onClick={(e) => {
+                handleClick(e, renderArr);
+              }}
+              key={i}
             >
               {moves.getMoveNum(renderArr[i].halfMove) +
                 moves.getPieceSymbol(
@@ -179,7 +230,11 @@ const AnalysisBoard = ({ pgn, fetchFen, halfMoves, fetchHalfMoves }) => {
         }
       }
     }
-
+    // setCurrentChessNode(renderArr[newCurrentNodeIndex]);
+    // console.log(
+    //   "current chess node (coming from rendertojsx)",
+    //   renderArr[newCurrentNodeIndex]
+    // );
     return res;
   }
 

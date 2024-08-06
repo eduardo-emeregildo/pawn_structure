@@ -163,6 +163,17 @@ class Tree {
 
     return res;
   }
+  //given a node id in the main line, return the chessNode matching the nodeID. returns null if not found or if nodeID not in mainline
+  findNodeInMainline(nodeId, start = this.root) {
+    if (nodeId[0] != 1) {
+      return null;
+    }
+    if (JSON.stringify(start.nodeId) == JSON.stringify(nodeId)) {
+      return start;
+    } else if (start.children.length == 0) {
+      return null;
+    } else return this.findNodeInMainline(nodeId, start.children[0]);
+  }
 
   // treeRender(treeNode) {
   //   let res = [];
