@@ -30,10 +30,20 @@ const AnalysisBoard = ({ pgn, fetchFen, halfMoves, fetchHalfMoves }) => {
         fetchFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         setCurrentChessNode(moves.root);
         fetchHalfMoves([1, 0]);
+        const element = document.getElementById("heading");
+        element.scrollIntoView({
+          behavior: "instant",
+          block: "nearest",
+        });
       } else {
         fetchFen(res.halfMoveObj.after);
         setCurrentChessNode(res);
         fetchHalfMoves(res.nodeId);
+        const element = document.getElementById(res.nodeId.join());
+        element.scrollIntoView({
+          behavior: "instant",
+          block: "nearest",
+        });
       }
     }
   };
@@ -44,6 +54,11 @@ const AnalysisBoard = ({ pgn, fetchFen, halfMoves, fetchHalfMoves }) => {
       fetchFen(res.halfMoveObj.after);
       setCurrentChessNode(res);
       fetchHalfMoves(res.nodeId);
+      const element = document.getElementById(res.nodeId.join());
+      element.scrollIntoView({
+        behavior: "instant",
+        block: "nearest",
+      });
     }
   };
 
@@ -240,17 +255,24 @@ const AnalysisBoard = ({ pgn, fetchFen, halfMoves, fetchHalfMoves }) => {
       tabIndex="0"
       onKeyDown={(e) => {
         if (e.key === "ArrowLeft") {
+          e.preventDefault();
           handleLeft();
         } else if (e.key === "ArrowRight") {
+          e.preventDefault();
           handleRight();
-        } else if (e.key === "ArrowUp") {
+        } else if (e.key === "ArrowUp" && pgn != "") {
+          e.preventDefault();
           fetchFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
           setCurrentChessNode(moves.root);
           fetchHalfMoves([1, 0]);
+          const element = document.getElementById("heading");
+          element.scrollIntoView({
+            behavior: "instant",
+          });
         }
       }}
     >
-      <div className="text-center font-bold">
+      <div className="text-center font-bold" id="heading">
         {Object.keys(header).length === 0
           ? ""
           : `${header.White} - ${header.Black} (${header.Result == "1/2-1/2" ? "\u00BD - \u00BD" : header.Result})`}
