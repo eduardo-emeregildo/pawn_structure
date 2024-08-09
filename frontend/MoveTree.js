@@ -160,9 +160,47 @@ class Tree {
     if (treeNode.children.length > 0) {
       res = res.concat(this.treeRender(treeNode.children[0]));
     }
-
     return res;
   }
+
+  //same as treeRender put pushes the san instead of the node itself. Used for testing purposes
+  treeRenderSan(treeNode) {
+    let res = [];
+    treeNode.children.forEach((mainChild) => {
+      // if you are the main line, i.e. a childs nodeId = [parent.nodeid[0], parent.nodeid[1] + 1]
+      if (
+        JSON.stringify(mainChild.parent.nodeId) ==
+        JSON.stringify([mainChild.nodeId[0], mainChild.nodeId[1] - 1])
+      ) {
+        res.push(
+          mainChild.nodeId.join() +
+            "-" +
+            this.getMoveNum(mainChild.halfMove) +
+            this.getPieceSymbol(mainChild.halfMove, mainChild.halfMoveObj.san)
+        );
+      } else {
+        //recursive call
+        // res = res.concat(this.treeRender(mainChild));
+
+        //below is to switch from using parenthesis to nested arrays
+        let tmp = [
+          mainChild.nodeId.join() +
+            "-" +
+            this.getMoveNum(mainChild.halfMove) +
+            mainChild.halfMoveObj.san,
+        ];
+        res.push(tmp.concat(this.treeRenderSan(mainChild)));
+
+        // let tmp = `(${this.getMoveNum(halfMove) + this.getPieceSymbol(halfMove, mainChild.halfMoveObj.san)} `;
+        // res.push(tmp + this.treeRender(mainChild, halfMove + 1) + ")");
+      }
+    });
+    if (treeNode.children.length > 0) {
+      res = res.concat(this.treeRenderSan(treeNode.children[0]));
+    }
+    return res;
+  }
+
   //given a node id in the main line, return the chessNode matching the nodeID. returns null if not found or if nodeID not in mainline
   findNodeInMainline(nodeId, start = this.root) {
     if (nodeId[0] != 1) {
@@ -173,6 +211,50 @@ class Tree {
     } else if (start.children.length == 0) {
       return null;
     } else return this.findNodeInMainline(nodeId, start.children[0]);
+  }
+
+  //deep copying whole tree. Call with no args. Unfortunate but seems like I must do this to update state in react
+  deepCopy(start = this.root, parent = null) {
+    let tree = new Tree();
+
+    tree.numVariations = this.numVariations;
+    let newHalfMove =
+      start.halfMoveObj == null ? null : { ...start.halfMoveObj };
+
+    tree.root = new ChessNode(
+      [...start.nodeId],
+      newHalfMove,
+      parent,
+      start.halfMove
+    );
+    if (start.children.length != 0) {
+      for (let i = 0; i < start.children.length; i++) {
+        let tmp = this.deepCopy(start.children[i], tree.root);
+        tree.root.children.push(tmp.root);
+        // if (i != 0) {
+        //   tree.numVariations += 1;
+        // }
+      }
+    }
+    return tree;
+  }
+
+  //find a node in the whole tree
+  findNode(nodeId, start = this.root) {
+    if (JSON.stringify(start.nodeId) == JSON.stringify(nodeId)) {
+      return start;
+    }
+
+    if (start.children.length == 0) {
+      return null;
+    }
+
+    for (const child of start.children) {
+      let res = this.findNode(nodeId, child);
+      if (res != null) {
+        return res;
+      }
+    }
   }
 
   // treeRender(treeNode) {

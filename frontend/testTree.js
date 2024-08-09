@@ -198,6 +198,32 @@ tree.addNode(tree.root, newMove);
 // tree.addNode(newVariation.children[2].children[1], newMove);
 
 let renderArr = tree.treeRender(tree.root);
+
+const checkVals = (treeNode) => {
+  let res = [];
+  treeNode.children.map((mainChild) => {
+    res.push(mainChild.halfMoveObj.san);
+    res = res.concat(checkVals(mainChild));
+  });
+  return res;
+};
+
+// console.log(checkVals(tree.root));
+let newTree = tree.deepCopy();
+// console.log(checkVals(tree.root));
+// console.log(checkVals(newTree.root));
+console.log(
+  JSON.stringify(checkVals(tree.root)) ===
+    JSON.stringify(checkVals(newTree.root))
+);
+console.log(tree.numVariations, " ", newTree.numVariations);
+console.log(newTree.root.children[0].children[2].children[0].nodeId);
+// console.log(tree.treeRenderSan(tree.root));
+
+// console.log("LENGTH OF RENDERARR IS: ", renderArr.length);
+// let newTree = tree.deepCopy();
+// newTree = newTree.treeRender(newTree.root);
+
 // console.log(renderArr);
 // console.log(tree.getPieceSymbol(0, "Qxd7+"));
 

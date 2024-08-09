@@ -7,8 +7,10 @@ import { SlArrowDown } from "react-icons/sl";
 import { GiCycle } from "react-icons/gi";
 import plans from "../plans.json";
 import { Chess } from "chess.js";
+import { toast } from "react-toastify";
+import { Tree } from "../../MoveTree.js";
 
-//implement adding a move, highlight right half move on piece drag, get engine analysis, make the analysis board scroll down on arrow key press, try to make common ps and custom buttons align
+//keep testing/adding tweaks to analysis board, add custom contextmenu to be able do delete moves(maybe promote variation),make app responsive, get engine analysis,try to make common ps and custom buttons align
 
 const PlayArea = () => {
   const [games, setGames] = useState({ output: [], offset: 0, tableName: "" });
@@ -23,26 +25,10 @@ const PlayArea = () => {
   //halfMoves will hold the nodeId of the current node being displayed, defaults to [1,0] since root node has nodeId [1,0]
   const [halfMoves, setHalfMoves] = useState([1, 0]);
   const [pgn, setPgn] = useState("");
-  //   const test = `[Event "European Women's Blitz Championship 2023"]
-  // [Site "?"]
-  // [Date "????.??.??"]
-  // [Round "6.20"]
-  // [White "Guichard, Pauline"]
-  // [Black "Dubois, Martine"]
-  // [Result "1-0"]
-  // [WhiteElo "2157"]
-  // [BlackElo "1923"]
-  // [ECO "D26d"]
-  // [Source "LichessBroadcast"]
-  // [WhiteTitle "IM"]
-  // [BlackTitle "WIM"]
-  // [Opening "Queen's Gambit Accepted: Old Variation"]
 
-  // 1.d4 d5 2.c4 dxc4 3.e3 Nf6 4.Bxc4 e6 5.Nf3 a6 6.O-O Nbd7 7.Nbd2 c5 8.e4 b5 9.e5 bxc4 10.exf6 Qxf6 11.Nxc4 Bb7 12.Nfe5 Nxe5 13.dxe5 Qg6 14.Qa4+ Ke7 15.f3 Rd8 16.Be3 Rd5 17.Qb3 Bc6 18.Qb6 Bd7 19.Rad1 Ke8 20.Rxd5 exd5 21.Qb8+ Ke7 22.Bxc5+ Ke6 23.Bxf8 Rxf8 24.Qxf8 dxc4 25.Qd6+ Kf5 26.Qxd7+ 1-0
-  // `;
-  //   const read = new Chess();
-  //   read.loadPgn(test);
-  //   console.log(read.history({ verbose: true }));
+  const [moves, setMoves] = useState(new Tree());
+  //stores a reference to current chess node. This will be useful for handleLeft/Right and adding a move since all of these are dependent on the current node. The on click functionality is handled differently since it doesnt depend on current node. initialize to root
+  const [currentChessNode, setCurrentChessNode] = useState(moves.root);
 
   const fetchHalfMoves = (newHalfMoves) => {
     setHalfMoves(newHalfMoves);
@@ -63,6 +49,13 @@ const PlayArea = () => {
   const fetchGames = (gamesObj) => {
     setGames(gamesObj);
   };
+  const fetchMoves = (newMoves) => {
+    setMoves(newMoves);
+  };
+
+  const fetchCurrentChessNode = (newNode) => {
+    setCurrentChessNode(newNode);
+  };
 
   let menuRef = useRef();
 
@@ -79,15 +72,183 @@ const PlayArea = () => {
     };
   });
 
+  const handleLeft = () => {
+    let res = moves.handleLeft(currentChessNode);
+    if (res != null) {
+      if (res.parent == null) {
+        //show starting position
+        setFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        setCurrentChessNode(moves.root);
+        setHalfMoves([1, 0]);
+        const element = document.getElementById("heading");
+        element.scrollIntoView({
+          behavior: "instant",
+          block: "nearest",
+        });
+      } else {
+        setFen(res.halfMoveObj.after);
+        setCurrentChessNode(res);
+        setHalfMoves(res.nodeId);
+        const element = document.getElementById(res.nodeId.join());
+        element.scrollIntoView({
+          behavior: "instant",
+          block: "nearest",
+        });
+      }
+    }
+  };
+
+  const handleRight = () => {
+    let res = moves.handleRight(currentChessNode);
+    if (res != null) {
+      setFen(res.halfMoveObj.after);
+      setCurrentChessNode(res);
+      setHalfMoves(res.nodeId);
+      const element = document.getElementById(res.nodeId.join());
+      element.scrollIntoView({
+        behavior: "instant",
+        block: "nearest",
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (pgn != "") {
+      const element = document.getElementById(currentChessNode.nodeId.join());
+      element.scrollIntoView({
+        behavior: "instant",
+        block: "nearest",
+      });
+    }
+  }, [moves]);
+
+  function makeAMove(sourceSquare, targetSquare, piece) {
+    if (pgn == "") {
+      return false;
+    }
+    try {
+      // check if move has already been made
+      if (currentChessNode.children.length != 0) {
+        for (const child of currentChessNode.children) {
+          if (
+            child.halfMoveObj.from == sourceSquare &&
+            child.halfMoveObj.to == targetSquare
+          ) {
+            //instead of returning false, this should make the move and return true
+            setHalfMoves(child.nodeId);
+            setCurrentChessNode(child);
+            setFen(child.halfMoveObj.after);
+            return true;
+          }
+        }
+      }
+      let pos = new Chess(fen);
+      let newMove = pos.move({
+        from: sourceSquare,
+        to: targetSquare,
+      });
+      let newTree = new Tree();
+      newTree.numVariations = moves.numVariations;
+      newTree.root = moves.root;
+
+      newTree.addNode(currentChessNode, newMove);
+
+      setHalfMoves(
+        currentChessNode.children[currentChessNode.children.length - 1].nodeId
+      );
+      setCurrentChessNode(
+        (oldNode) => oldNode.children[oldNode.children.length - 1]
+      );
+      setFen((oldFen) => newMove.after);
+      setMoves(newTree);
+
+      return true;
+      // console.log(AnalysisBoard.getCurrentChessNode());}
+    } catch (error) {
+      // console.log("Try blocked failed with error: ", error);
+      return false;
+    }
+  }
+
+  function promotionPieceSelect(piece, promoteFromSquare, promoteToSquare) {
+    if (pgn == "") {
+      return false;
+    }
+    try {
+      // check if move has already been made
+      if (currentChessNode.children.length != 0) {
+        for (const child of currentChessNode.children) {
+          if (
+            child.halfMoveObj.from == promoteFromSquare &&
+            child.halfMoveObj.to == promoteToSquare &&
+            child.halfMoveObj.promotion == piece[1].toLowerCase()
+          ) {
+            setHalfMoves(child.nodeId);
+            setCurrentChessNode(child);
+            setFen(child.halfMoveObj.after);
+            return true;
+          }
+        }
+      }
+
+      let pos = new Chess(fen);
+      console.log(fen);
+      let newMove = pos.move({
+        from: promoteFromSquare,
+        to: promoteToSquare,
+        promotion: piece[1].toLowerCase(),
+      });
+      let newTree = new Tree();
+      newTree.numVariations = moves.numVariations;
+      newTree.root = moves.root;
+      newTree.addNode(currentChessNode, newMove);
+      setHalfMoves(
+        currentChessNode.children[currentChessNode.children.length - 1].nodeId
+      );
+      setCurrentChessNode(
+        (oldNode) => oldNode.children[oldNode.children.length - 1]
+      );
+      setFen((oldFen) => newMove.after);
+      setMoves(newTree);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
   return (
     <div className="flex justify-evenly bg-[#101014] py-10 min-h-screen ">
       {/* Chessboard */}
-      <div>
+      <div
+        className="focus:outline-none"
+        tabIndex="0"
+        onKeyDown={(e) => {
+          if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            handleLeft();
+          } else if (e.key === "ArrowRight") {
+            e.preventDefault();
+            handleRight();
+          } else if (e.key === "ArrowUp" && pgn != "") {
+            e.preventDefault();
+            setFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+            setCurrentChessNode(moves.root);
+            setHalfMoves([1, 0]);
+            const element = document.getElementById("heading");
+            element.scrollIntoView({
+              behavior: "instant",
+            });
+          }
+        }}
+      >
         <Chessboard
           boardWidth="650"
           position={fen}
           animationDuration={150}
           boardOrientation={boardOrientation}
+          showPromotionDialog={true}
+          onPieceDrop={makeAMove}
+          onPromotionPieceSelect={promotionPieceSelect}
         />
         <button
           className="btn btn-xs mt-3"
@@ -129,7 +290,15 @@ const PlayArea = () => {
           </ul>
         </details>
 
-        <button className="btn m-1 align-top">Custom Pawn Structure</button>
+        <button
+          className={`btn m-1 align-top  ${pgn == "" ? "pointer-events-none bg-gray-500 border-gray-500" : ""}`}
+          onClick={() => {
+            navigator.clipboard.writeText(pgn);
+            toast.success("Pgn copied to clipboard");
+          }}
+        >
+          Copy Pgn to Clipboard
+        </button>
 
         {/* Analysis board*/}
         <AnalysisBoard
@@ -137,6 +306,12 @@ const PlayArea = () => {
           fetchFen={fetchFen}
           halfMoves={halfMoves}
           fetchHalfMoves={fetchHalfMoves}
+          moves={moves}
+          currentChessNode={currentChessNode}
+          fetchMoves={fetchMoves}
+          fetchCurrentChessNode={fetchCurrentChessNode}
+          handleLeft={handleLeft}
+          handleRight={handleRight}
         />
 
         <Table

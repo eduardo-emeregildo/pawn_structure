@@ -56,7 +56,6 @@ const Table = ({
                       `api/pgns/${games.tableName}/${e.currentTarget.id.slice(1)}/${games.tableName}/${games.output[e.currentTarget.id.slice(1) - 1].movenumber}`
                     );
                     const data = await res.json();
-                    console.log("pgn is:", data);
                     //replace to remove line breaks
                     fetchFen(data.fen.replace(/(\r\n|\n|\r)/gm, ""));
                     // fetchPgn(data.pgn.replace(/(\r\n|\n|\r)/gm, "\n"));
