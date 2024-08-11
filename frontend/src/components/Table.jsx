@@ -65,7 +65,6 @@ const Table = ({
                     //probably need to do the same to get pgn over to playArea
                     // console.log(e.currentTarget.id.slice(1));
                   } catch (error) {
-                    console.log("Error fetching data:DDD", error);
                     toast.error("Error fetching pgn");
                   } finally {
                     setLoading(false);

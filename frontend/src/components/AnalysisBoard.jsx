@@ -2,6 +2,7 @@ import React from "react";
 import { Chess } from "chess.js";
 import { Tree } from "../../MoveTree.js";
 import { useState, useEffect } from "react";
+import ContextMenu from "./ContextMenu.jsx";
 //testing purposes
 // import { tree } from "../../TestTree.js";
 
@@ -19,6 +20,13 @@ const AnalysisBoard = ({
 }) => {
   // const [moves, fetchMoves] = useState(new Tree());
   const [header, setHeader] = useState({});
+  const [contextMenuPosition, setContextMenuPosition] = useState({
+    x: 0,
+    y: 0,
+  });
+
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
+  console.log("ISMENUVISIBLE: ", isMenuVisible);
   // let testTree = tree.treeRender(tree.root);
 
   const handleClick = (e, renderArr) => {
@@ -52,6 +60,15 @@ const AnalysisBoard = ({
 
     // return () => {};
   }, [pgn]);
+
+  // useEffect(() => {
+  //   if (pgn != "") {
+  //     console.log(contextMenuPosition.x, " ", contextMenuPosition.y);
+  //     setIsMenuVisible(true);
+  //   }
+
+  //   // return () => {};
+  // }, [contextMenuPosition]);
 
   //takes in a renderArr[i] resulting from Tree.treeRender() such that renderArr[i] is a sideline, so an array itself
   function displaySideLine(arr) {
@@ -144,6 +161,24 @@ const AnalysisBoard = ({
                   onClick={(e) => {
                     handleClick(e, renderArr);
                   }}
+                  onContextMenu={(e) => {
+                    e.preventDefault();
+                    // let newPosition = { ...contextMenuPosition };
+                    // newPosition.x = e.pageX;
+                    // newPosition.y = e.pageY + 15;
+                    handleClick(e, renderArr);
+                    let rect = e.currentTarget.getBoundingClientRect();
+                    setContextMenuPosition({
+                      x: rect.left + window.scrollX,
+                      y: rect.top + window.scrollY + 20,
+                    });
+                    setIsMenuVisible(true);
+                    // handleClick(e, renderArr);
+
+                    // setIsMenuVisible(true);
+                    // console.log(e.pageX);
+                    // console.log(e.pageY);
+                  }}
                 >
                   {moves.getMoveNum(renderArr[i].halfMove) +
                     moves.getPieceSymbol(
@@ -224,7 +259,7 @@ const AnalysisBoard = ({
   }
   return (
     <div
-      className="bg-gray-600 h-[40rem] w-[33rem] rounded-md max-h-[40rem] my-2 text-gray-100  flex flex-col gap-2 overflow-scroll focus:outline-none "
+      className="bg-gray-600 h-[40rem] w-[33rem] rounded-md max-h-[40rem] my-2 text-gray-100  flex flex-col gap-2 overflow-scroll focus:outline-none"
       tabIndex="0"
       onKeyDown={(e) => {
         if (e.key === "ArrowLeft") {
@@ -241,6 +276,7 @@ const AnalysisBoard = ({
           const element = document.getElementById("heading");
           element.scrollIntoView({
             behavior: "instant",
+            block: "nearest",
           });
         }
       }}
@@ -255,6 +291,10 @@ const AnalysisBoard = ({
         pgn == "" ? "" : renderToJsx(moves.treeRender(moves.root))
         //moves.treeRender(moves.root)
       }
+      <ContextMenu
+        contextMenuPosition={contextMenuPosition}
+        isMenuVisible={isMenuVisible}
+      />
     </div>
   );
 };

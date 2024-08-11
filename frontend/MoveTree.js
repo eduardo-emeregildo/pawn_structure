@@ -56,7 +56,7 @@ class ChessNode {
 }
 
 class Tree {
-  //numVariations is a count of how many variations there are. 1 would mean that only the main line exists. This is essentially how the first elt in nodeId will be filled when new variations are introduced
+  //numVariations is a count of how many total variations have existed. 1 would mean that only the main line existed. ex: If numVariations = 3 and a node is deleted, numVariations wont change as 3 is still the total number of variations that have existed. This is essentially how the first elt in nodeId will be filled when new variations are introduced
   constructor() {
     this.numVariations = 1;
     this.root = new ChessNode([1, 0], null, null);
@@ -110,6 +110,39 @@ class Tree {
   addNode(node, halfMoveObj) {
     let varCount = node.add(this.numVariations, halfMoveObj);
     this.numVariations = varCount;
+  }
+  //deletes node given a nodeid. If node is mainline(nodeid[0] = 1) parent's children is set to [] to preserve main line
+  deleteNode(node) {
+    //if parent is null, the node is the root
+    if (node.parent == null) {
+      return;
+    }
+
+    //handles deleting a mainline move. clears the parent
+    if (node.nodeId[0] == 1) {
+      //if its the first main line move that is being deleted, reset tree since there would be no variation to show
+      if (node.nodeId[1] == 1) {
+        this.reset();
+      } else {
+        node.parent.children = [];
+      }
+    } else {
+      //search for index in parent children array. Remembrer to add linear search hear for children array <= 128 since linear search performs better for smaller values
+      let l = 0;
+      let r = node.parent.children.length - 1;
+
+      while (l <= r) {
+        let m = Math.floor((l + r) / 2);
+        if (node.parent.children[m].nodeId[0] > node.nodeId[0]) {
+          l = m + 1;
+        } else if (node.parent.children[m].nodeId[0] < node.nodeId[0]) {
+          r = m - 1;
+        } else {
+          node.parent.children.splice(m, 1);
+          // return node.parent.children[m];
+        }
+      }
+    }
   }
 
   //given halfMovenum will return move number(i.e. 1. or 1...) halfMove=1 is first halfMove

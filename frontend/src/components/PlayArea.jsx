@@ -10,7 +10,7 @@ import { Chess } from "chess.js";
 import { toast } from "react-toastify";
 import { Tree } from "../../MoveTree.js";
 
-//keep testing/adding tweaks to analysis board, add custom contextmenu to be able do delete moves(maybe promote variation),make app responsive, get engine analysis,try to make common ps and custom buttons align
+//make context menu close on click/scroll, add context menu to all moves,add deleting a node functionality,make app responsive, get engine analysis,try to make common ps and custom buttons align
 
 const PlayArea = () => {
   const [games, setGames] = useState({ output: [], offset: 0, tableName: "" });
@@ -237,6 +237,7 @@ const PlayArea = () => {
             const element = document.getElementById("heading");
             element.scrollIntoView({
               behavior: "instant",
+              block: "nearest",
             });
           }
         }}
