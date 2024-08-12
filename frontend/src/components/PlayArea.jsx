@@ -260,6 +260,12 @@ const PlayArea = () => {
             });
           }
         }}
+        onDragStart={() => {
+          if (isMenuVisible) {
+            setContextMenuPosition({ x: 0, y: 0 });
+            setIsMenuVisible(false);
+          }
+        }}
       >
         <Chessboard
           boardWidth={window.screen.width >= 768 ? 650 : 300}
