@@ -217,7 +217,14 @@ console.log(
     JSON.stringify(checkVals(newTree.root))
 );
 console.log(tree.numVariations, " ", newTree.numVariations);
-console.log(newTree.root.children[0].children[2].children[0].nodeId);
+console.log(newTree.root.children[0].children[2].children[0].halfMoveObj.san);
+console.log("BEFORE DELETED [3,2]: ", tree.treeRenderSan(tree.root));
+tree.deleteNode(tree.root.children[0].children[2].children[0]);
+console.log(tree.treeRenderSan(tree.root));
+
+// console.log(tree.deleteNode(tree.root.children[0].children[2].children[0]));
+// console.log(tree.deleteNode(newVariation.children[2].children[1]));
+// console.log(tree.deleteNode(newVariation.children[2]));
 // console.log(tree.treeRenderSan(tree.root));
 
 // console.log("LENGTH OF RENDERARR IS: ", renderArr.length);

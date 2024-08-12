@@ -111,35 +111,40 @@ class Tree {
     let varCount = node.add(this.numVariations, halfMoveObj);
     this.numVariations = varCount;
   }
-  //deletes node given a nodeid. If node is mainline(nodeid[0] = 1) parent's children is set to [] to preserve main line
-  deleteNode(node) {
+  //deletes node given the node to delete. If node is mainline(nodeid[0] = 1) parent's children is set to [] to preserve main line
+  deleteNode(targetNode) {
     //if parent is null, the node is the root
-    if (node.parent == null) {
+    if (targetNode.parent == null) {
       return;
     }
 
     //handles deleting a mainline move. clears the parent
-    if (node.nodeId[0] == 1) {
+    if (targetNode.nodeId[0] == 1) {
       //if its the first main line move that is being deleted, reset tree since there would be no variation to show
-      if (node.nodeId[1] == 1) {
+      if (targetNode.nodeId[1] == 1) {
         this.reset();
       } else {
-        node.parent.children = [];
+        targetNode.parent.children = [];
       }
     } else {
-      //search for index in parent children array. Remembrer to add linear search hear for children array <= 128 since linear search performs better for smaller values
-      let l = 0;
-      let r = node.parent.children.length - 1;
-
-      while (l <= r) {
-        let m = Math.floor((l + r) / 2);
-        if (node.parent.children[m].nodeId[0] > node.nodeId[0]) {
-          l = m + 1;
-        } else if (node.parent.children[m].nodeId[0] < node.nodeId[0]) {
-          r = m - 1;
-        } else {
-          node.parent.children.splice(m, 1);
-          // return node.parent.children[m];
+      //search for index in parent children array. Does linear search for array size <= 128 since it performs better than binary search at these sizes
+      if (targetNode.parent.children.length <= 128) {
+        let arrIndex = targetNode.parent.children.indexOf(targetNode);
+        targetNode.parent.children.splice(arrIndex, 1);
+      } else {
+        let l = 0;
+        let r = targetNode.parent.children.length - 1;
+        while (l <= r) {
+          let m = Math.floor((l + r) / 2);
+          if (targetNode.nodeId[0] > targetNode.parent.children[m].nodeId[0]) {
+            l = m + 1;
+          } else if (
+            targetNode.nodeId[0] < targetNode.parent.children[m].nodeId[0]
+          ) {
+            r = m - 1;
+          } else {
+            targetNode.parent.children.splice(m, 1);
+          }
         }
       }
     }
@@ -164,11 +169,12 @@ class Tree {
   //returns renderArray, which is an array of nodes, with sideLines being represented as nested arrays. Give it the root node to return the whole game in array form
   treeRender(treeNode) {
     let res = [];
-    treeNode.children.forEach((mainChild) => {
+    treeNode.children.forEach((mainChild, index) => {
       // if you are the main line, i.e. a childs nodeId = [parent.nodeid[0], parent.nodeid[1] + 1]
       if (
-        JSON.stringify(mainChild.parent.nodeId) ==
-        JSON.stringify([mainChild.nodeId[0], mainChild.nodeId[1] - 1])
+        // JSON.stringify(mainChild.parent.nodeId) ==
+        // JSON.stringify([mainChild.nodeId[0], mainChild.nodeId[1] - 1])
+        index == 0
       ) {
         res.push(
           // this.getMoveNum(mainChild.halfMove) +
@@ -199,16 +205,17 @@ class Tree {
   //same as treeRender put pushes the san instead of the node itself. Used for testing purposes
   treeRenderSan(treeNode) {
     let res = [];
-    treeNode.children.forEach((mainChild) => {
+    treeNode.children.forEach((mainChild, index) => {
       // if you are the main line, i.e. a childs nodeId = [parent.nodeid[0], parent.nodeid[1] + 1]
       if (
-        JSON.stringify(mainChild.parent.nodeId) ==
-        JSON.stringify([mainChild.nodeId[0], mainChild.nodeId[1] - 1])
+        // JSON.stringify(mainChild.parent.nodeId) ==
+        // JSON.stringify([mainChild.nodeId[0], mainChild.nodeId[1] - 1])
+        index == 0
       ) {
         res.push(
-          mainChild.nodeId.join() +
-            "-" +
-            this.getMoveNum(mainChild.halfMove) +
+          // mainChild.nodeId.join() +
+          //   "-" +
+          this.getMoveNum(mainChild.halfMove) +
             this.getPieceSymbol(mainChild.halfMove, mainChild.halfMoveObj.san)
         );
       } else {
@@ -217,10 +224,9 @@ class Tree {
 
         //below is to switch from using parenthesis to nested arrays
         let tmp = [
-          mainChild.nodeId.join() +
-            "-" +
-            this.getMoveNum(mainChild.halfMove) +
-            mainChild.halfMoveObj.san,
+          // mainChild.nodeId.join() +
+          //   "-" +
+          this.getMoveNum(mainChild.halfMove) + mainChild.halfMoveObj.san,
         ];
         res.push(tmp.concat(this.treeRenderSan(mainChild)));
 

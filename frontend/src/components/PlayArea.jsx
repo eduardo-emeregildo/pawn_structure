@@ -10,7 +10,7 @@ import { Chess } from "chess.js";
 import { toast } from "react-toastify";
 import { Tree } from "../../MoveTree.js";
 
-//make context menu close on click/scroll, add context menu to all moves,add deleting a node functionality,make app responsive, get engine analysis,try to make common ps and custom buttons align
+//test context menu and deleting a node some more,make app responsive, get engine analysis,try to make common ps and custom buttons align
 
 const PlayArea = () => {
   const [games, setGames] = useState({ output: [], offset: 0, tableName: "" });
@@ -29,6 +29,13 @@ const PlayArea = () => {
   const [moves, setMoves] = useState(new Tree());
   //stores a reference to current chess node. This will be useful for handleLeft/Right and adding a move since all of these are dependent on the current node. The on click functionality is handled differently since it doesnt depend on current node. initialize to root
   const [currentChessNode, setCurrentChessNode] = useState(moves.root);
+
+  const [contextMenuPosition, setContextMenuPosition] = useState({
+    x: 0,
+    y: 0,
+  });
+
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
 
   const fetchHalfMoves = (newHalfMoves) => {
     setHalfMoves(newHalfMoves);
@@ -217,12 +224,24 @@ const PlayArea = () => {
   }
 
   return (
-    <div className="flex justify-evenly bg-[#101014] py-10 min-h-screen ">
+    <div
+      className="flex flex-col items-center  bg-[#101014] py-10 min-h-screen xl:flex-row xl:justify-evenly xl:items-start"
+      onClick={() => {
+        if (isMenuVisible) {
+          setContextMenuPosition({ x: 0, y: 0 });
+          setIsMenuVisible(false);
+        }
+      }}
+    >
       {/* Chessboard */}
       <div
         className="focus:outline-none"
         tabIndex="0"
         onKeyDown={(e) => {
+          if (isMenuVisible) {
+            setContextMenuPosition({ x: 0, y: 0 });
+            setIsMenuVisible(false);
+          }
           if (e.key === "ArrowLeft") {
             e.preventDefault();
             handleLeft();
@@ -243,7 +262,7 @@ const PlayArea = () => {
         }}
       >
         <Chessboard
-          boardWidth="650"
+          boardWidth={window.screen.width >= 768 ? 650 : 300}
           position={fen}
           animationDuration={150}
           boardOrientation={boardOrientation}
@@ -313,6 +332,11 @@ const PlayArea = () => {
           fetchCurrentChessNode={fetchCurrentChessNode}
           handleLeft={handleLeft}
           handleRight={handleRight}
+          isMenuVisible={isMenuVisible}
+          setIsMenuVisible={setIsMenuVisible}
+          contextMenuPosition={contextMenuPosition}
+          setContextMenuPosition={setContextMenuPosition}
+          fetchPgn={fetchPgn}
         />
 
         <Table

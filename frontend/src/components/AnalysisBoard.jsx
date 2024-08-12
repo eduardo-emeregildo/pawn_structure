@@ -17,16 +17,14 @@ const AnalysisBoard = ({
   fetchCurrentChessNode,
   handleLeft,
   handleRight,
+  isMenuVisible,
+  setIsMenuVisible,
+  contextMenuPosition,
+  setContextMenuPosition,
+  fetchPgn,
 }) => {
   // const [moves, fetchMoves] = useState(new Tree());
   const [header, setHeader] = useState({});
-  const [contextMenuPosition, setContextMenuPosition] = useState({
-    x: 0,
-    y: 0,
-  });
-
-  const [isMenuVisible, setIsMenuVisible] = useState(false);
-  console.log("ISMENUVISIBLE: ", isMenuVisible);
   // let testTree = tree.treeRender(tree.root);
 
   const handleClick = (e, renderArr) => {
@@ -38,6 +36,16 @@ const AnalysisBoard = ({
     fetchCurrentChessNode(
       renderArr[parseInt(e.currentTarget.getAttribute("i"))]
     );
+  };
+
+  const handleContextMenu = (e) => {
+    e.preventDefault();
+    let rect = e.currentTarget.getBoundingClientRect();
+    setContextMenuPosition({
+      x: rect.left + window.scrollX,
+      y: rect.top + window.scrollY + 20,
+    });
+    setIsMenuVisible(true);
   };
 
   useEffect(() => {
@@ -85,6 +93,10 @@ const AnalysisBoard = ({
               onClick={(e) => {
                 handleClick(e, arr);
               }}
+              onContextMenu={(e) => {
+                handleClick(e, arr);
+                handleContextMenu(e);
+              }}
             >
               {(move.halfMove % 2 == 0 && id != 0
                 ? ""
@@ -120,6 +132,10 @@ const AnalysisBoard = ({
               onClick={(e) => {
                 handleClick(e, renderArr);
               }}
+              onContextMenu={(e) => {
+                handleClick(e, renderArr);
+                handleContextMenu(e);
+              }}
             >
               {moves.getMoveNum(renderArr[i].halfMove) +
                 moves.getPieceSymbol(
@@ -142,6 +158,10 @@ const AnalysisBoard = ({
                 onClick={(e) => {
                   handleClick(e, renderArr);
                 }}
+                onContextMenu={(e) => {
+                  handleClick(e, renderArr);
+                  handleContextMenu(e);
+                }}
               >
                 {moves.getMoveNum(renderArr[i].halfMove) +
                   moves.getPieceSymbol(
@@ -162,22 +182,8 @@ const AnalysisBoard = ({
                     handleClick(e, renderArr);
                   }}
                   onContextMenu={(e) => {
-                    e.preventDefault();
-                    // let newPosition = { ...contextMenuPosition };
-                    // newPosition.x = e.pageX;
-                    // newPosition.y = e.pageY + 15;
                     handleClick(e, renderArr);
-                    let rect = e.currentTarget.getBoundingClientRect();
-                    setContextMenuPosition({
-                      x: rect.left + window.scrollX,
-                      y: rect.top + window.scrollY + 20,
-                    });
-                    setIsMenuVisible(true);
-                    // handleClick(e, renderArr);
-
-                    // setIsMenuVisible(true);
-                    // console.log(e.pageX);
-                    // console.log(e.pageY);
+                    handleContextMenu(e);
                   }}
                 >
                   {moves.getMoveNum(renderArr[i].halfMove) +
@@ -193,6 +199,10 @@ const AnalysisBoard = ({
                   i={i + 1}
                   onClick={(e) => {
                     handleClick(e, renderArr);
+                  }}
+                  onContextMenu={(e) => {
+                    handleClick(e, renderArr);
+                    handleContextMenu(e);
                   }}
                   key={renderArr[i + 1].nodeId}
                 >
@@ -219,6 +229,10 @@ const AnalysisBoard = ({
               i={i}
               onClick={(e) => {
                 handleClick(e, renderArr);
+              }}
+              onContextMenu={(e) => {
+                handleClick(e, renderArr);
+                handleContextMenu(e);
               }}
               key={i}
             >
@@ -261,7 +275,17 @@ const AnalysisBoard = ({
     <div
       className="bg-gray-600 h-[40rem] w-[33rem] rounded-md max-h-[40rem] my-2 text-gray-100  flex flex-col gap-2 overflow-scroll focus:outline-none"
       tabIndex="0"
+      onScroll={() => {
+        if (isMenuVisible) {
+          setContextMenuPosition({ x: 0, y: 0 });
+          setIsMenuVisible(false);
+        }
+      }}
       onKeyDown={(e) => {
+        if (isMenuVisible) {
+          setContextMenuPosition({ x: 0, y: 0 });
+          setIsMenuVisible(false);
+        }
         if (e.key === "ArrowLeft") {
           e.preventDefault();
           handleLeft();
@@ -294,6 +318,13 @@ const AnalysisBoard = ({
       <ContextMenu
         contextMenuPosition={contextMenuPosition}
         isMenuVisible={isMenuVisible}
+        currentChessNode={currentChessNode}
+        fetchCurrentChessNode={fetchCurrentChessNode}
+        moves={moves}
+        fetchMoves={fetchMoves}
+        fetchFen={fetchFen}
+        fetchHalfMoves={fetchHalfMoves}
+        fetchPgn={fetchPgn}
       />
     </div>
   );
