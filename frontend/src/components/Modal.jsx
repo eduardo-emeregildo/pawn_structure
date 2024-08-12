@@ -1,7 +1,5 @@
 // import ClipLoader from "react-spinners/ClipLoader";
 import Card from "./Card";
-import Spinner from "./Spinner";
-import Table from "./Table";
 import { toast } from "react-toastify";
 
 const Modal = ({
@@ -72,14 +70,11 @@ const Modal = ({
               <button
                 className="btn btn-primary"
                 onClick={async () => {
-                  // if (loading) {
-                  //   <Spinner loading={loading} />;
-                  // }
                   try {
                     //planObj.img is also the name of the table
                     const res = await fetch(`api/queries/${planObj.img}/0`);
                     const data = await res.json();
-                    console.log("res is: ", data);
+
                     //runs in the context of PlayArea. This is where games state var is updated in PlayArea
                     fetchGames(data);
                     fetchCaption(planObj.name);
