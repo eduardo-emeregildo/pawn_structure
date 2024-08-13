@@ -218,9 +218,10 @@ console.log(
 );
 console.log(tree.numVariations, " ", newTree.numVariations);
 console.log(newTree.root.children[0].children[2].children[0].halfMoveObj.san);
-console.log("BEFORE DELETED [3,2]: ", tree.treeRenderSan(tree.root));
+console.log("BEFORE DELETED [3,2]: ", tree.treeRenderPgn(tree.root));
 tree.deleteNode(tree.root.children[0].children[2].children[0]);
-console.log(tree.treeRenderSan(tree.root));
+console.log(tree.treeRenderPgn(tree.root));
+console.log(tree.treeRenderPgn(tree.root).join(""));
 
 // console.log(tree.deleteNode(tree.root.children[0].children[2].children[0]));
 // console.log(tree.deleteNode(newVariation.children[2].children[1]));

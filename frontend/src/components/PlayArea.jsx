@@ -319,7 +319,11 @@ const PlayArea = () => {
         <button
           className={`btn m-1 align-top  ${pgn == "" ? "pointer-events-none bg-gray-500 border-gray-500" : ""}`}
           onClick={() => {
-            navigator.clipboard.writeText(pgn);
+            let headers = pgn.split("\n\r")[0];
+            navigator.clipboard.writeText(
+              headers + "\n" + moves.treeRenderPgn(moves.root).join("")
+            );
+
             toast.success("Pgn copied to clipboard");
           }}
         >

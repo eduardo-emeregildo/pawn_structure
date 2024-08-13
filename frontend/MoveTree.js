@@ -202,40 +202,32 @@ class Tree {
     return res;
   }
 
-  //same as treeRender put pushes the san instead of the node itself. Used for testing purposes
-  treeRenderSan(treeNode) {
+  //same as treeRender but returns an array of strings that can be joined to form a new pgn
+  treeRenderPgn(treeNode) {
     let res = [];
     treeNode.children.forEach((mainChild, index) => {
       // if you are the main line, i.e. a childs nodeId = [parent.nodeid[0], parent.nodeid[1] + 1]
-      if (
-        // JSON.stringify(mainChild.parent.nodeId) ==
-        // JSON.stringify([mainChild.nodeId[0], mainChild.nodeId[1] - 1])
-        index == 0
-      ) {
+      if (index == 0) {
         res.push(
-          // mainChild.nodeId.join() +
-          //   "-" +
-          this.getMoveNum(mainChild.halfMove) +
-            this.getPieceSymbol(mainChild.halfMove, mainChild.halfMoveObj.san)
+          (mainChild.halfMove % 2 == 0
+            ? ""
+            : this.getMoveNum(mainChild.halfMove)) +
+            " " +
+            mainChild.halfMoveObj.san +
+            " "
         );
       } else {
-        //recursive call
-        // res = res.concat(this.treeRender(mainChild));
-
-        //below is to switch from using parenthesis to nested arrays
-        let tmp = [
-          // mainChild.nodeId.join() +
-          //   "-" +
-          this.getMoveNum(mainChild.halfMove) + mainChild.halfMoveObj.san,
-        ];
-        res.push(tmp.concat(this.treeRenderSan(mainChild)));
-
-        // let tmp = `(${this.getMoveNum(halfMove) + this.getPieceSymbol(halfMove, mainChild.halfMoveObj.san)} `;
-        // res.push(tmp + this.treeRender(mainChild, halfMove + 1) + ")");
+        let tmp =
+          "(" +
+          this.getMoveNum(mainChild.halfMove) +
+          " " +
+          mainChild.halfMoveObj.san +
+          " ";
+        res.push(tmp + this.treeRenderPgn(mainChild).join("") + ") ");
       }
     });
     if (treeNode.children.length > 0) {
-      res = res.concat(this.treeRenderSan(treeNode.children[0]));
+      res = res.concat(this.treeRenderPgn(treeNode.children[0]));
     }
     return res;
   }
