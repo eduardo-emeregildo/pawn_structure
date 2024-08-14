@@ -24,21 +24,23 @@ const Modal = ({
       </button>
       <dialog id={planObj.id} className="modal">
         <div className="modal-box w-11/12 max-w-5xl">
-          <div className="flex justify-around">
+          <div className="flex max-[768px]:flex-col max-[768px]:items-center max-[768px]:gap-5  justify-around flex-row">
             <Card
               name={planObj.name}
               description={planObj.description}
               img={planObj.img}
             />
 
-            <div className="flex flex-col w-[50%] justify-center">
-              <div className="grid  card bg-base-300 rounded-box place-items-center pb-1">
-                <h3 className="font-bold text-2xl pb-1">Plans For White</h3>
+            <div className="flex max-[768px]:flex-row  max-[768px]:w-full flex-col  w-[50%] justify-center">
+              <div className="flex card bg-base-300 max-[768px]:w-11/12 rounded-box pb-1 h-fit">
+                <h3 className="font-bold max-[550px]:text-lg text-2xl pb-1 text-center">
+                  Plans For White
+                </h3>
                 <div className="join join-vertical">
                   {planObj.whitePlans.map((whitePlan, index) => (
                     <p
                       key={index}
-                      className="list-item list-disc list-inside py-1 px-2 text-start whitespace-pre-line tracking-wide"
+                      className="list-item list-disc list-inside py-1 px-2 max-[550px]:text-xs text-start whitespace-pre-line tracking-wide "
                     >
                       {whitePlan}
                     </p>
@@ -46,15 +48,19 @@ const Modal = ({
                 </div>
               </div>
 
-              <div className="divider"></div>
+              <div
+                className={`divider${window.screen.width <= 768 ? " divider-horizontal" : ""}`}
+              ></div>
 
-              <div className="grid  card bg-base-300 rounded-box place-items-center pb-1">
-                <h3 className="font-bold text-2xl pb-1">Plans For Black</h3>
+              <div className="flex card bg-base-300 max-[768px]:w-11/12 rounded-box  pb-1 h-fit">
+                <h3 className="font-bold max-[550px]:text-lg text-2xl pb-1 text-center">
+                  Plans For Black
+                </h3>
                 <div className="join join-vertical">
                   {planObj.blackPlans.map((blackPlan, index) => (
                     <p
                       key={index}
-                      className="list-item list-disc list-inside py-1 px-2 text-start whitespace-pre-line tracking-wide"
+                      className="list-item list-disc list-inside py-1 px-2 max-[550px]:text-xs text-start whitespace-pre-line tracking-wide"
                     >
                       {blackPlan}
                     </p>

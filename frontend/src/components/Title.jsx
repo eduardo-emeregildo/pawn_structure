@@ -15,10 +15,20 @@ const Title = () => {
         <div className="max-w-md">
           <h1 className="mb-5 text-6xl font-bold">Pawn Structure Search</h1>
           <p className="mb-5 text-xl">
-            Understand chess at a deeper level. Search through 13+ million games
-            by their corresponding pawn structure.
+            Understand chess at a deeper level. Search and analyze over 13
+            million games by their corresponding pawn structure.
           </p>
-          <button className="btn btn-primary">Learn More</button>
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              document.getElementById("mainDropdown").scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+            }}
+          >
+            Get Started
+          </button>
         </div>
       </div>
     </div>

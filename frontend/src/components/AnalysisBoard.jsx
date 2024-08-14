@@ -273,7 +273,7 @@ const AnalysisBoard = ({
   }
   return (
     <div
-      className="bg-gray-600 h-[40rem] w-[33rem] rounded-md max-h-[40rem] my-2 text-gray-100  flex flex-col gap-2 overflow-scroll focus:outline-none"
+      className="bg-gray-600 max-[460px]:h-[30rem] max-[550px]:w-full  h-[40rem] w-[33rem] rounded-md my-2 text-gray-100  flex flex-col gap-2 overflow-scroll focus:outline-none"
       tabIndex="0"
       onScroll={() => {
         if (isMenuVisible) {
@@ -297,11 +297,13 @@ const AnalysisBoard = ({
           fetchFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
           fetchCurrentChessNode(moves.root);
           fetchHalfMoves([1, 0]);
-          const element = document.getElementById("heading");
-          element.scrollIntoView({
-            behavior: "instant",
-            block: "nearest",
-          });
+          if (window.screen.width >= 1280) {
+            const element = document.getElementById("heading");
+            element.scrollIntoView({
+              behavior: "instant",
+              block: "nearest",
+            });
+          }
         }
       }}
     >

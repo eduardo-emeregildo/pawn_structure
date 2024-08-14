@@ -10,7 +10,7 @@ import { Chess } from "chess.js";
 import { toast } from "react-toastify";
 import { Tree } from "../../MoveTree.js";
 
-//test context menu and deleting a node some more,make app responsive, get engine analysis,try to make common ps and custom buttons align
+//continue testing to find any bugs. Also continue testing on different screen sizes to see if there are additional media queries that need to be added
 
 const PlayArea = () => {
   const [games, setGames] = useState({ output: [], offset: 0, tableName: "" });
@@ -87,20 +87,24 @@ const PlayArea = () => {
         setFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         setCurrentChessNode(moves.root);
         setHalfMoves([1, 0]);
-        const element = document.getElementById("heading");
-        element.scrollIntoView({
-          behavior: "instant",
-          block: "nearest",
-        });
+        if (window.screen.width >= 1280) {
+          const element = document.getElementById("heading");
+          element.scrollIntoView({
+            behavior: "instant",
+            block: "nearest",
+          });
+        }
       } else {
         setFen(res.halfMoveObj.after);
         setCurrentChessNode(res);
         setHalfMoves(res.nodeId);
-        const element = document.getElementById(res.nodeId.join());
-        element.scrollIntoView({
-          behavior: "instant",
-          block: "nearest",
-        });
+        if (window.screen.width >= 1280) {
+          const element = document.getElementById(res.nodeId.join());
+          element.scrollIntoView({
+            behavior: "instant",
+            block: "nearest",
+          });
+        }
       }
     }
   };
@@ -111,21 +115,25 @@ const PlayArea = () => {
       setFen(res.halfMoveObj.after);
       setCurrentChessNode(res);
       setHalfMoves(res.nodeId);
-      const element = document.getElementById(res.nodeId.join());
-      element.scrollIntoView({
-        behavior: "instant",
-        block: "nearest",
-      });
+      if (window.screen.width >= 1280) {
+        const element = document.getElementById(res.nodeId.join());
+        element.scrollIntoView({
+          behavior: "instant",
+          block: "nearest",
+        });
+      }
     }
   };
 
   useEffect(() => {
     if (pgn != "") {
-      const element = document.getElementById(currentChessNode.nodeId.join());
-      element.scrollIntoView({
-        behavior: "instant",
-        block: "nearest",
-      });
+      if (window.screen.width >= 1280) {
+        const element = document.getElementById(currentChessNode.nodeId.join());
+        element.scrollIntoView({
+          behavior: "instant",
+          block: "nearest",
+        });
+      }
     }
   }, [moves]);
 
@@ -141,10 +149,17 @@ const PlayArea = () => {
             child.halfMoveObj.from == sourceSquare &&
             child.halfMoveObj.to == targetSquare
           ) {
-            //instead of returning false, this should make the move and return true
             setHalfMoves(child.nodeId);
             setCurrentChessNode(child);
             setFen(child.halfMoveObj.after);
+
+            if (window.screen.width >= 1280) {
+              const element = document.getElementById(child.nodeId.join());
+              element.scrollIntoView({
+                behavior: "instant",
+                block: "nearest",
+              });
+            }
             return true;
           }
         }
@@ -193,6 +208,13 @@ const PlayArea = () => {
             setHalfMoves(child.nodeId);
             setCurrentChessNode(child);
             setFen(child.halfMoveObj.after);
+            if (window.screen.width >= 1280) {
+              const element = document.getElementById(child.nodeId.join());
+              element.scrollIntoView({
+                behavior: "instant",
+                block: "nearest",
+              });
+            }
             return true;
           }
         }
@@ -225,7 +247,7 @@ const PlayArea = () => {
 
   return (
     <div
-      className="flex flex-col items-center  bg-[#101014] py-10 min-h-screen xl:flex-row xl:justify-evenly xl:items-start"
+      className="flex flex-col items-center bg-[#101014] py-10 min-h-screen xl:flex-row xl:justify-evenly xl:items-start"
       onClick={() => {
         if (isMenuVisible) {
           setContextMenuPosition({ x: 0, y: 0 });
@@ -235,7 +257,7 @@ const PlayArea = () => {
     >
       {/* Chessboard */}
       <div
-        className="focus:outline-none"
+        className="focus:outline-none pb-3"
         tabIndex="0"
         onKeyDown={(e) => {
           if (isMenuVisible) {
@@ -253,11 +275,13 @@ const PlayArea = () => {
             setFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
             setCurrentChessNode(moves.root);
             setHalfMoves([1, 0]);
-            const element = document.getElementById("heading");
-            element.scrollIntoView({
-              behavior: "instant",
-              block: "nearest",
-            });
+            if (window.screen.width >= 1280) {
+              const element = document.getElementById("heading");
+              element.scrollIntoView({
+                behavior: "instant",
+                block: "nearest",
+              });
+            }
           }
         }}
         onDragStart={() => {
@@ -268,7 +292,11 @@ const PlayArea = () => {
         }}
       >
         <Chessboard
-          boardWidth={window.screen.width >= 768 ? 650 : 300}
+          boardWidth={
+            window.screen.width >= 768
+              ? 650
+              : window.screen.width - ~~(window.screen.width * 0.05)
+          }
           position={fen}
           animationDuration={150}
           boardOrientation={boardOrientation}
@@ -290,9 +318,13 @@ const PlayArea = () => {
 
       {/* List of games, pawn structure dropdown/button, moves area*/}
 
-      <div>
+      <div className="max-[460px]:w-11/12">
         <details className="dropdown" id="mainDropdown" ref={menuRef}>
-          <summary tabIndex={0} role="button" className="btn m-1 align-bottom">
+          <summary
+            tabIndex={0}
+            role="button"
+            className={`btn${window.screen.width <= 460 ? " btn-sm " : " "}m-1 align-bottom`}
+          >
             <SlArrowDown />
             Common Pawn Structures
           </summary>
@@ -317,7 +349,7 @@ const PlayArea = () => {
         </details>
 
         <button
-          className={`btn m-1 align-top  ${pgn == "" ? "pointer-events-none bg-gray-500 border-gray-500" : ""}`}
+          className={`btn${window.screen.width <= 460 ? " btn-sm " : " "}m-1 align-top  ${pgn == "" ? "pointer-events-none bg-gray-500 border-gray-500" : ""}`}
           onClick={() => {
             let headers = pgn.split("\n\r")[0];
             navigator.clipboard.writeText(

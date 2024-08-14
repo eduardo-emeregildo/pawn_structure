@@ -43,7 +43,7 @@
     ],
     "blackPlans": [
       "Place a knight on e4, which from there controls key squares and supplements a kingside attack. This plan is not always possible because white has the option of playing f2-f3",
-      "Try to play ..b6 followed by ..c5 to chip at the strong d4 pawn. This will result in a transformation to the hanging pawns structure. Sometimes ..c5 can be played without ..b6, which likely transposes to an IQP",
+      "Try to play ...b6 followed by ...c5 to chip at the strong d4 pawn. This will result in a transformation to the hanging pawns structure. Sometimes ...c5 can be played without ...b6, which likely transposes to an IQP",
       "Play b7-b5 one white has b2-b4 to create a firm outpost on the c4 square and to slow down the minority. This plan is less common because it creates a weakness on c6."
     ]
   },
@@ -62,7 +62,7 @@
       "Preventing the c5 break with b2-b4. This pawn advance also gains queenside space which can squeeze black"
     ],
     "blackPlans": [
-      "Achieve the c5 break, which gives the pieces more scope. The pawn structure can transform into a symmetrical one after dxc5, or an IQP ..cxd4",
+      "Achieve the c5 break, which gives the pieces more scope. The pawn structure can transform into a symmetrical one after dxc5, or an IQP ...cxd4",
       "Achieve the e5 break, undermining the d4 pawn and gaining scope for the pieces",
       "Exert pressure on the d4 pawn once e3-e4 has been played",
       "Disrupting white's center and gaining some influence on the center with f7-f5"
@@ -81,8 +81,8 @@
     ],
     "blackPlans": [
       "Create an attack on the kingside, but without completely losing control of the central squares as white can gain counterplay there (especially on the e5 square)",
-      "Improve the bad light squared by bishop via ..Bd7-Be8-Bh5 or via ..b6 followed by Ba6",
-      "Create central pressure with ..b6 followed by ..c5"
+      "Improve the bad light squared by bishop via ...Bd7-Be8-Bh5 or via ...b6 followed by Ba6",
+      "Create central pressure with ...b6 followed by ...c5"
     ]
   },
 
@@ -100,9 +100,9 @@
       "Advance the f pawn to f4-f5, preventing black from place his light squared bishop on e6, where it would control the d5 square"
     ],
     "blackPlans": [
-      "Break in the center ..d5, which would remove the backwards pawn, give the pieces more scope and create an initiative on the center",
+      "Break in the center ...d5, which would remove the backwards pawn, give the pieces more scope and create an initiative on the center",
       "Exert pressure on the c file, so that white cannot play Nc3-d5 because of the vulnurable pawn on c2",
-      "Play ..b5-b4 to create an attack on the queenside as well as expel white's knight from c3, so that black can achieve the d5 break"
+      "Play ...b5-b4 to create an attack on the queenside as well as expel white's knight from c3, so that black can achieve the d5 break"
     ]
   },
 
@@ -113,10 +113,10 @@
     "description": "This structure typically arises from a normal open sicilian where white recaptures on d5 with a pawn. This recapture dramatically changes the position and the plans of both sides",
     "whitePlans": [
       "White now has a pawn majority on the queenside, so advancing the queenside majority with b4 and c4-c5 is strong",
-      "On occasions after black has played ..f5, white can place his bishop on b1-h7 diagonal and play g4, breaking up black's pawn structure"
+      "On occasions after black has played ...f5, white can place his bishop on b1-h7 diagonal and play g4, breaking up black's pawn structure"
     ],
     "blackPlans": [
-      "Expand on the kingside with ..f5 and develop a kingside attack",
+      "Expand on the kingside with ...f5 and develop a kingside attack",
       "Restrict or undermine white's queenside expansion with the b5 pawn thrust"
     ]
   },
@@ -133,10 +133,10 @@
     ],
     "blackPlans": [
       "Trade pieces to decrease the space problem",
-      "Break on the queenside and contest white's strong bind with ..b5, and after the cxb5 ..axb5, apply pressure along the a file",
-      "Break on the kingside with ..f5 and later create an attack against the white king",
-      "Pressure the queenside pawns with ..Qb6-Qb4",
-      "On rare occasions play ..e6 followed by ..d5"
+      "Break on the queenside and contest white's strong bind with ...b5, and after the cxb5 ...axb5, apply pressure along the a file",
+      "Break on the kingside with ...f5 and later create an attack against the white king",
+      "Pressure the queenside pawns with ...Qb6-Qb4",
+      "On rare occasions play ...e6 followed by ...d5"
     ]
   },
 
@@ -151,10 +151,10 @@
       "Break with f5 followed by a kingside attack down the f file"
     ],
     "blackPlans": [
-      "Advance the queenside majority with ..b5,..c4,..b4 etc. Create a passed pawn if possible",
+      "Advance the queenside majority with ...b5,...c4,...b4 etc. Create a passed pawn if possible",
       "apply pressure down the e file, preventing white from advancing his central majority and forcing them to babysit the e4 pawn",
-      "Create kingside play with ..h5-..h4 when white has a knight on g3",
-      "Break white's center with ..f5. This plan is stronger when white has already played f4, since the f5 pawn thrust will weaken the d5 pawn",
+      "Create kingside play with ...h5-...h4 when white has a knight on g3",
+      "Break white's center with ...f5. This plan is stronger when white has already played f4, since the f5 pawn thrust will weaken the d5 pawn",
       "Trade off black's light squared bishop, since it is black's worst piece because it does not contribute to the advance of the queenside pawns. Endgames in general tend to favor black because of their ability to create a passed pawn on the queenside"
     ]
   },
@@ -166,17 +166,17 @@
     "description": "This pawn structure is seen mostly in the main lines of the King's Indian Defense, but can also arise from the Bogo-Indian and the open games. This structure yields play on opposite flanks",
     "whitePlans": [
       "Break on the queenside with c4-c5-cxd6 and invade via the c file",
-      "Expand on the queenside with c4-c5-c6, and if black responds with ..b6, invade down the a file after a4-a5-axb6",
+      "Expand on the queenside with c4-c5-c6, and if black responds with ...b6, invade down the a file after a4-a5-axb6",
       "Implement restrictive measures with g4, slowling down or neutralizing black's kingside play, and only then proceed with the above queenside plans. These plans are commonly seen in the Petrosian and Makagonov variation of the King's Indian Defense",
-      "If black allows it, respond to ..f5 with Ng5-Ne6",
+      "If black allows it, respond to ...f5 with Ng5-Ne6",
       "Trade light squared bishops to reduce black's attacking potential. Black's light squared bishop is a key piece for black as it often takes part in sacrifices on the kingside to break the white king's defenses"
     ],
     "blackPlans": [
-      "Create a kingside attack with ..f5-f4 and later ..g5-g4-g3, or ..gxf3 attacking the f3 pawn, which becomes the base of the pawn chain",
-      "Open the f file via ..f5-fxe4 and create an attack via this file, or pressure e4 pawn",
-      "Play ..h5-h4 and ..Bh6, which activates the rather useless bishop on g7",
-      "Play ..c6 to contest the center and challenge white's grasp of it",
-      "Play ..c5 to slow down white's queenside play"
+      "Create a kingside attack with ...f5-f4 and later ...g5-g4-g3, or ...gxf3 attacking the f3 pawn, which becomes the base of the pawn chain",
+      "Open the f file via ...f5-fxe4 and create an attack via this file, or pressure e4 pawn",
+      "Play ...h5-h4 and ...Bh6, which activates the rather useless bishop on g7",
+      "Play ...c6 to contest the center and challenge white's grasp of it",
+      "Play ...c5 to slow down white's queenside play"
     ]
   },
 
@@ -191,10 +191,10 @@
       "Attack black's kingside with rooks along the third rank, a bishop on the b1-h7 diagonal and a queen on h5. A piece sacrifice on the kingside is often required to break through. Greek gift sacrifices are very common in this structure"
     ],
     "blackPlans": [
-      "Attack the base of white's pawn chain, which is white's d4 pawn, with ..c5, ..Nc6 and ..Qb6. In some cases use major pieces to invade down the c file",
-      "Advance ..c5-c4, and then attack the new base of the chain (the c3 pawn) with ..b5-b4. Beware that this plan can be too slow if white has an initiative on the kingside",
+      "Attack the base of white's pawn chain, which is white's d4 pawn, with ...c5, ...Nc6 and ...Qb6. In some cases use major pieces to invade down the c file",
+      "Advance ...c5-c4, and then attack the new base of the chain (the c3 pawn) with ...b5-b4. Beware that this plan can be too slow if white has an initiative on the kingside",
       "Trade light squared bishops, since this is black's worst piece, but also because in many instances, white's light squared bishop plays a crucial role in the kingside attack",
-      "Slow down white's kingside attack with ..f5, or challenge white's center with ..f6"
+      "Slow down white's kingside attack with ...f5, or challenge white's center with ...f6"
     ]
   },
 
@@ -209,8 +209,8 @@
       "Play on the queenside with b4, a4 and then invade on the a file or attack one of black's queenside pawns"
     ],
     "blackPlans": [
-      "Create queenside play with ..a5,..b5-b4",
-      "Expand on the kingside with ..f5-f4, in King's Indian fashion. In many cases this plan will not be available to black because white will likely have a large concentration of pieces on the kingside, therefore they will be stronger on that side of the board"
+      "Create queenside play with ...a5,...b5-b4",
+      "Expand on the kingside with ...f5-f4, in King's Indian fashion. In many cases this plan will not be available to black because white will likely have a large concentration of pieces on the kingside, therefore they will be stronger on that side of the board"
     ]
   }
 ]
