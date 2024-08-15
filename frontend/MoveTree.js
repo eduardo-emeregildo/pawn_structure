@@ -51,8 +51,6 @@ class ChessNode {
       return variationCount + 1;
     }
   }
-
-  //maybe remove in node in the future
 }
 
 class Tree {
@@ -62,11 +60,10 @@ class Tree {
     this.root = new ChessNode([1, 0], null, null);
   }
 
+  //initialize the tree (main line). Takes in the array of objects that results from loadPgn method on chess.js
   init(halfMoveObjArr) {
-    //initialize the tree (main line). Takes in the array of objects that results from loadPgn method on chess.js
     let curr = this.root;
     for (let i = 0; i < halfMoveObjArr.length; i++) {
-      // curr.add(1, halfMoveObjArr[i]);
       this.addNode(curr, halfMoveObjArr[i]);
       curr = curr.children[0];
     }
@@ -75,7 +72,6 @@ class Tree {
   }
 
   handleRight(currNode) {
-    // go to the next move (child), if size is 0 the end of the line has been reached and returns null, otherwise returns the first child (user would have to click on the frontend to go other variations)
     if (currNode.children.length == 0) {
       return null;
     }
@@ -84,7 +80,6 @@ class Tree {
   }
 
   handleLeft(currNode) {
-    // go to previous move, if current nodeId is [1,0] and parent is null, you have reached the starting position(root node), so return null. Otherwise return parent node
     if (
       currNode.nodeId[0] == 1 &&
       currNode.nodeId[1] == 0 &&
@@ -106,14 +101,12 @@ class Tree {
     this.numVariations += 1;
   }
 
-  //adds a child to node
   addNode(node, halfMoveObj) {
     let varCount = node.add(this.numVariations, halfMoveObj);
     this.numVariations = varCount;
   }
-  //deletes node given the node to delete. If node is mainline(nodeid[0] = 1) parent's children is set to [] to preserve main line
+  // If node is mainline(nodeid[0] = 1) parent's children is set to [] to preserve main line
   deleteNode(targetNode) {
-    //if parent is null, the node is the root
     if (targetNode.parent == null) {
       return;
     }
@@ -262,9 +255,6 @@ class Tree {
       for (let i = 0; i < start.children.length; i++) {
         let tmp = this.deepCopy(start.children[i], tree.root);
         tree.root.children.push(tmp.root);
-        // if (i != 0) {
-        //   tree.numVariations += 1;
-        // }
       }
     }
     return tree;
@@ -287,29 +277,6 @@ class Tree {
       }
     }
   }
-
-  // treeRender(treeNode) {
-  //   let res = [];
-  //   treeNode.children.forEach((mainChild) => {
-  //     // if you are the main line, i.e. a childs nodeId = [parent.nodeid[0], parent.nodeid[1] + 1]
-  //     if (
-  //       JSON.stringify(mainChild.parent.nodeId) ==
-  //       JSON.stringify([mainChild.nodeId[0], mainChild.nodeId[1] - 1])
-  //     ) {
-  //       res.push(mainChild.halfMoveObj.san);
-  //     } else {
-  //       //recursive call
-  //       // res = res.concat(this.treeRender(mainChild));
-  //       let tmp = [mainChild.halfMoveObj.san];
-  //       res.push(tmp.concat(this.treeRender(mainChild)));
-  //     }
-  //   });
-  //   if (treeNode.children.length > 0) {
-  //     res = res.concat(this.treeRender(treeNode.children[0]));
-  //   }
-
-  //   return res;
-  // }
 }
 
 export { Tree };

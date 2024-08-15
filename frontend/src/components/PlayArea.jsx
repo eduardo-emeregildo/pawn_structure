@@ -4,6 +4,8 @@ import Table from "./Table";
 import AnalysisBoard from "./AnalysisBoard";
 import { Chessboard } from "react-chessboard";
 import { SlArrowDown } from "react-icons/sl";
+import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowRight } from "react-icons/fa";
 import { GiCycle } from "react-icons/gi";
 import plans from "../plans.json";
 import { Chess } from "chess.js";
@@ -183,11 +185,8 @@ const PlayArea = () => {
       );
       setFen((oldFen) => newMove.after);
       setMoves(newTree);
-
       return true;
-      // console.log(AnalysisBoard.getCurrentChessNode());}
     } catch (error) {
-      // console.log("Try blocked failed with error: ", error);
       return false;
     }
   }
@@ -255,7 +254,6 @@ const PlayArea = () => {
         }
       }}
     >
-      {/* Chessboard */}
       <div
         className="focus:outline-none pb-3"
         tabIndex="0"
@@ -304,19 +302,31 @@ const PlayArea = () => {
           onPieceDrop={makeAMove}
           onPromotionPieceSelect={promotionPieceSelect}
         />
-        <button
-          className="btn btn-xs mt-3"
-          onClick={() => {
-            boardOrientation == "white"
-              ? setBoardOrientation("black")
-              : setBoardOrientation("white");
-          }}
-        >
-          <GiCycle />
-        </button>
-      </div>
 
-      {/* List of games, pawn structure dropdown/button, moves area*/}
+        <div className="flex justify-center gap-10">
+          <GiCycle
+            className="text-gray-300 m-1 mt-2 mb-0 text-lg hover:text-white  hover:cursor-pointer inline"
+            onClick={() => {
+              boardOrientation == "white"
+                ? setBoardOrientation("black")
+                : setBoardOrientation("white");
+            }}
+          />
+
+          <FaArrowLeft
+            className="inline text-gray-300 m-1 mt-2 mb-0 text-xl hover:text-white hover:cursor-pointer"
+            onClick={() => {
+              handleLeft();
+            }}
+          />
+          <FaArrowRight
+            className="inline text-gray-300 m-1 mt-2 mb-0 text-xl hover:text-white hover:cursor-pointer"
+            onClick={() => {
+              handleRight();
+            }}
+          />
+        </div>
+      </div>
 
       <div className="max-[460px]:w-11/12">
         <details className="dropdown" id="mainDropdown" ref={menuRef}>
@@ -362,7 +372,6 @@ const PlayArea = () => {
           Copy Pgn to Clipboard
         </button>
 
-        {/* Analysis board*/}
         <AnalysisBoard
           pgn={pgn}
           fetchFen={fetchFen}

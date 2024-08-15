@@ -65,18 +65,7 @@ const AnalysisBoard = ({
 
       fetchCurrentChessNode(tmp.findNodeInMainline(halfMoves));
     }
-
-    // return () => {};
   }, [pgn]);
-
-  // useEffect(() => {
-  //   if (pgn != "") {
-  //     console.log(contextMenuPosition.x, " ", contextMenuPosition.y);
-  //     setIsMenuVisible(true);
-  //   }
-
-  //   // return () => {};
-  // }, [contextMenuPosition]);
 
   //takes in a renderArr[i] resulting from Tree.treeRender() such that renderArr[i] is a sideline, so an array itself
   function displaySideLine(arr) {
@@ -117,7 +106,7 @@ const AnalysisBoard = ({
   function renderToJsx(renderArr) {
     let res = [];
     let i = 0;
-    // let newCurrentNodeIndex = null;
+
     while (i < renderArr.length) {
       //if current move is a mainline move, search to the right for all the side lines deviating from this move
       if (!Array.isArray(renderArr[i])) {
@@ -313,10 +302,7 @@ const AnalysisBoard = ({
           : `${header.White} - ${header.Black} (${header.Result == "1/2-1/2" ? "\u00BD - \u00BD" : header.Result})`}
       </div>
 
-      {
-        pgn == "" ? "" : renderToJsx(moves.treeRender(moves.root))
-        //moves.treeRender(moves.root)
-      }
+      {pgn == "" ? "" : renderToJsx(moves.treeRender(moves.root))}
       <ContextMenu
         contextMenuPosition={contextMenuPosition}
         isMenuVisible={isMenuVisible}

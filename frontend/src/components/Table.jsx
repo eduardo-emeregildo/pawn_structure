@@ -13,12 +13,10 @@ const Table = ({
 
   return (
     <div className="overflow-x-auto  max-[550px]:w-full w-[33rem]  max-h-64  bg-white rounded-md">
-      {/* {loading ? <Spinner loading={loading} /> : null} */}
       <table className="table bg-white">
         <caption className="mt-2 text-xl font-semibold leading-none tracking-tight text-gray-900 dark:text-white">
           {caption}
         </caption>
-        {/* head */}
         <thead>
           <tr>
             <th>White Name</th>
@@ -105,11 +103,9 @@ const Table = ({
                         `api/queries/${games.tableName}/${parseInt(games.offset) + 1}`
                       );
                       const data = await res.json();
-                      //A deep copy is made here because react components dont rerender if they are shallow copies, or if the new modified state is referencing: More info here: https://www.reddit.com/r/react/comments/u5wzbu/components_not_rerendering_with_state_changes/
                       const newGames = { ...games };
                       newGames.output.push(...data.output);
                       newGames.offset = data.offset;
-                      // console.log("NEWGAMES IS: ", newGames);
                       fetchGames(newGames);
                       toast.success("Games loaded succesfully");
                     } catch (error) {
@@ -123,8 +119,6 @@ const Table = ({
               </td>
             </tr>
           )}
-
-          {/* <button className="btn m-2">Load More Games</button> */}
         </tbody>
       </table>
     </div>
