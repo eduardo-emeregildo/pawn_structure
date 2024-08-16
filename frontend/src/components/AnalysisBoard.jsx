@@ -3,8 +3,6 @@ import { Chess } from "chess.js";
 import { Tree } from "../../MoveTree.js";
 import { useState, useEffect } from "react";
 import ContextMenu from "./ContextMenu.jsx";
-//testing purposes
-// import { tree } from "../../TestTree.js";
 
 const AnalysisBoard = ({
   pgn,

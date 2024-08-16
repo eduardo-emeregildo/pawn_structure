@@ -303,7 +303,7 @@ const PlayArea = () => {
           onPromotionPieceSelect={promotionPieceSelect}
         />
 
-        <div className="flex justify-center gap-10">
+        <div className="flex justify-evenly">
           <GiCycle
             className="text-gray-300 m-1 mt-2 mb-0 text-lg hover:text-white  hover:cursor-pointer inline"
             onClick={() => {

@@ -173,41 +173,6 @@ async function newGetGameInfo(baseName, startNum, endNum) {
   console.log("Output is: ", latin1String);
 }
 
-async function deleteTable(tablename) {
-  // deletes custom table that the user has made once they exit or if they make another custom table.
-  // Only one custom table will be in the db per user. On the front end it will keep track of the current custom table
-  // so the tablename will be retrieved from there.
-  // the front end will receive the JWT from the query function
-
-  // All this JWT stuff will be handled on the route. If auth was successful, then call this function
-
-  // deletetable should be protected, also getPgn and getGameInfo should be protected if the table you are searching is a custom table
-
-  // the custom table should have a unique name per client
-
-  //********************* */
-  // To keep this api stateless, I cant do the approach of keeping track of which user created which table
-  // What I will do to delete a table is use JWT to authenticate who can delete tables.
-  // This api should only be accessed by the client url and not allow anyone else to access it. This is I can manage the tables that exist in db.(If anyone can access the api, they can just send query requests and never call delete table, which would bloat the db)
-  //This is something im going to have to change with CORS
-
-  //The duplicate table case is something I will have to address later as well. might just make it so everyone has their own unique table.
-
-  const result = fs.readFileSync("auth.json", "utf8");
-  const client = new Client(JSON.parse(result));
-  await client.connect();
-
-  try {
-    await client.query(`DROP TABLE ${tablename}`);
-  } catch (error) {
-    await client.end();
-    return false;
-  }
-
-  await client.end();
-  return true;
-}
-
 async function makeTables() {
   await newQuery("IQP", "IQP.csv");
 
@@ -327,8 +292,6 @@ async function makeTables() {
 
 // deleteTable("whiteiqp");
 module.exports = {
-  deleteTable,
-  query,
   getGameInfo,
   getPgn,
   defaultTables,
