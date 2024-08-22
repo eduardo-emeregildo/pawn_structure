@@ -12,8 +12,6 @@ import { Chess } from "chess.js";
 import { toast } from "react-toastify";
 import { Tree } from "../../MoveTree.js";
 
-//continue testing to find any bugs. Also continue testing on different screen sizes to see if there are additional media queries that need to be added
-
 const PlayArea = () => {
   const [games, setGames] = useState({ output: [], offset: 0, tableName: "" });
 

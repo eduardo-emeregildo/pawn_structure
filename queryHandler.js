@@ -6,9 +6,11 @@ const path = require("path");
 const fs = require("fs");
 const buffer = require("buffer");
 const { Client } = require("pg");
+require("dotenv").config();
 
 const options = {
-  cwd: path.join(__dirname, "Scid vs PC-4.24", "bin"),
+  // cwd: path.join(__dirname, "scid", "scid_vs_pc-4.19"),
+  cwd: path.join(__dirname, "..", "bin"),
   encoding: "latin1",
 };
 
@@ -120,7 +122,6 @@ async function newQuery(baseName, filename) {
 }
 
 function getPgn(baseName, gameNumber, moveNumber) {
-  //moveNumber is the movenumber field in the psql table corresponding to the game that is being requested
   let side = moveNumber % 10;
   let move = ~~(moveNumber / 10);
   let halfMoves = move * 2;
@@ -139,8 +140,12 @@ function getPgn(baseName, gameNumber, moveNumber) {
 async function getGameInfo(tablename, offset) {
   // gets the game info of the tablename specified, gets 15 game info given the offset
   // offset = 0 gets the first 15 games, offset 1, gets games 16-30 etc
-  const result = fs.readFileSync("auth.json", "utf8");
-  const client = new Client(JSON.parse(result));
+  // const result = fs.readFileSync("auth.json", "utf8");
+  // const client = new Client(JSON.parse(result));
+  const connectionString = process.env.CONNECTION_STRING;
+  const client = new Client({
+    connectionString,
+  });
   await client.connect();
   await client.query("SET CLIENT_ENCODING=LATIN1");
   let output = await client.query(

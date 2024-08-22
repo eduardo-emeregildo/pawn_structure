@@ -59,8 +59,6 @@ const Table = ({
                     // fetchPgn(data.pgn.replace(/(\r\n|\n|\r)/gm, "\n"));
                     fetchPgn(new String(data.pgn));
                     fetchHalfMoves([1, data.halfMoves]);
-
-                    //probably need to do the same to get pgn over to playArea
                     // console.log(e.currentTarget.id.slice(1));
                   } catch (error) {
                     toast.error("Error fetching pgn");
@@ -109,7 +107,6 @@ const Table = ({
                       fetchGames(newGames);
                       toast.success("Games loaded succesfully");
                     } catch (error) {
-                      console.log("Error fetching data:DDD", error);
                       toast.error("Error fetching games");
                     }
                   }}
