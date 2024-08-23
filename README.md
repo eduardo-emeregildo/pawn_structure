@@ -6,10 +6,10 @@ A web app made using React, Node.js, PostgreSQL and Tcl/Tk to study pawn structu
 
 This project queries from a massive chess games database of over 13 million games based on 12 different pawn structures
 
+- Advanced French
 - Benoni
 - Carlsbad
 - Closed Ruy Lopez
-- Advanced French
 - Hanging Pawns
 - Isolated Queens Pawn
 - King's Indian
