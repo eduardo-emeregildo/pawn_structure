@@ -164,29 +164,11 @@ class Tree {
     let res = [];
     treeNode.children.forEach((mainChild, index) => {
       // if you are the main line, i.e. a childs nodeId = [parent.nodeid[0], parent.nodeid[1] + 1]
-      if (
-        // JSON.stringify(mainChild.parent.nodeId) ==
-        // JSON.stringify([mainChild.nodeId[0], mainChild.nodeId[1] - 1])
-        index == 0
-      ) {
-        res.push(
-          // this.getMoveNum(mainChild.halfMove) +
-          //   this.getPieceSymbol(mainChild.halfMove, mainChild.halfMoveObj.san)
-          mainChild
-        );
+      if (index == 0) {
+        res.push(mainChild);
       } else {
-        //recursive call
-        // res = res.concat(this.treeRender(mainChild));
-
-        //below is to switch from using parenthesis to nested arrays
-        let tmp = [
-          // this.getMoveNum(mainChild.halfMove) + mainChild.halfMoveObj.san,
-          mainChild,
-        ];
+        let tmp = [mainChild];
         res.push(tmp.concat(this.treeRender(mainChild)));
-
-        // let tmp = `(${this.getMoveNum(halfMove) + this.getPieceSymbol(halfMove, mainChild.halfMoveObj.san)} `;
-        // res.push(tmp + this.treeRender(mainChild, halfMove + 1) + ")");
       }
     });
     if (treeNode.children.length > 0) {
